@@ -23,4 +23,10 @@ public class Shader {
         glAttachShader(shaderProgram, fragmentShader);
         glLinkProgram(shaderProgram);
     }
+
+    public void uploadTexture(String name, int index) {
+        int texVar = glGetUniformLocation(shaderProgram, "tex0");
+        glUseProgram(shaderProgram);
+        glUniform1i(texVar, 0);
+    }
 }

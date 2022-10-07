@@ -23,7 +23,7 @@ import org.lwjgl.*;
 
 public class Engine {
     public long window;
-    int[] keys = new int[256];
+    int[] keys = new int[512];
     public int textureIndex = 1;
     public void init() {
         GLFWErrorCallback.createPrint(System.err).set();
@@ -38,9 +38,13 @@ public class Engine {
         window = glfwCreateWindow(800, 800, "Game", NULL, NULL);
 
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-                glfwSetWindowShouldClose(window, true);
-            keys[key] = action;
+            if (action == GLFW_PRESS)
+            {
+                keys[key] = 1;
+            }
+            else if (action == GLFW_RELEASE){
+                keys[key] = 0;
+            }
         });
 
         glfwMakeContextCurrent(window);
@@ -73,4 +77,9 @@ public class Engine {
         String str = Files.readString(fileName);
         return str;
     }
+
+    public Texture loadTex(String path) throws IOException {
+        return new Texture(path, this);
+    }
+
 }

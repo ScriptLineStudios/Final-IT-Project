@@ -62,29 +62,12 @@ public class Texture {
             assert false : "Error: (Texture) Could not load image '" + imagePath + "'";
         }
 
-        stbi_image_free(image);
+//        stbi_image_free(image);
 
-        int texVar = glGetUniformLocation(shader.shaderProgram, "tex0");
-        glUseProgram(shader.shaderProgram);
-        glUniform1i(texVar, 0);
+        shader.uploadTexture("tex0", textureIndex);
     }
 
     public void render(float x, float y, float width, float height) {
-        // float renderX = x / (1000 / 2);
-        // float renderY = y / (800 / 2);
-    
-        // float _y = (height/800) * 2;
-        // float _x = (width/1000) * 2;
-    
-        // float __y = (height/800);
-        // float __x = (width/1000);
-    
-        // float vertices[] = {
-        //     (renderX - _x / 2) + __x,      (renderY + _y -  _y / 2) + __y, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-        //     (renderX - _x / 2) + __x,      (renderY - _y / 2)       + __y, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-        //     (renderX + _x - _x / 2) + __x, (renderY - _y / 2) + __y,       0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-        //     (renderX + _x - _x / 2) + __x, (renderY + _y - _y / 2)  + __y, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        // };
         float vertices[] = {
              x,                 y + (height / 800), 0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           0.0f, 0.0f,
              x,                 y,                  0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           0.0f, 1.0f, 
