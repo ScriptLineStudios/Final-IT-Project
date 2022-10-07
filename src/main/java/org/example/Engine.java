@@ -10,6 +10,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 public class Engine {
     public long window;
+    int[] keys = new int[256];
     public void init() {
         GLFWErrorCallback.createPrint(System.err).set();
         glfwInit();
@@ -23,8 +24,9 @@ public class Engine {
         window = glfwCreateWindow(1000, 800, "Game", NULL, NULL);
 
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
                 glfwSetWindowShouldClose(window, true);
+            keys[key] = action;
         });
 
         glfwMakeContextCurrent(window);
@@ -45,5 +47,10 @@ public class Engine {
 
     public boolean windowOpen() {
         return !glfwWindowShouldClose(window);
+    }
+
+    public boolean getKey(int keyCode) {
+        if (keys[keyCode] == 1) return true;
+        return false;
     }
 }
