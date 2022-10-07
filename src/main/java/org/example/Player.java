@@ -20,10 +20,11 @@ public class Player extends Entity{
         };
 
     }
-
+    
+    @Override
     public void draw() {
-        animationIndex = super.animate(idleAnimations, animationIndex, 10);
-        idleAnimations[animationIndex / 10].render(0, 0, 256, 256);
+        animationIndex = super.animate(idleAnimations, animationIndex, 8);
+        idleAnimations[animationIndex / 8].render(0, 0, 256, 256);
     }
 
 }

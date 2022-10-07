@@ -4,7 +4,7 @@ public class Entity {
     public int animationIndex;
 
     Entity() {
-        
+
     }
 
     public int animate(Texture[] texArray, int animationIndex, int timeToDisplay) {
@@ -13,5 +13,9 @@ public class Entity {
         }
         animationIndex += 1;
         return animationIndex;
+    }
+
+    public void draw() {
+
     }
 }
