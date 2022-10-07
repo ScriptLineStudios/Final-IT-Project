@@ -1,110 +1,138 @@
 package org.example;
 
-import org.lwjgl.*;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL20;
 
+import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import java.io.*;
+import java.nio.*;
+import java.util.*;
+
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.stb.STBImage.*;
+import static org.lwjgl.stb.STBImage.stbi_load;
+import static org.lwjgl.stb.STBImageResize.*;
 
 public class Texture {
-    private String vertexShaderSrc = "#version 330 core\n" +
-            "layout (location=0) in vec3 aPos;\n" +
-            "layout (location=1) in vec4 aColor;\n" +
-            "\n" +
-            "out vec4 fColor;\n" +
-            "\n" +
-            "void main()\n" +
-            "{\n" +
-            "    fColor = aColor;\n" +
-            "    gl_Position = vec4(aPos, 1.0);\n" +
-            "}";
+    public Shader shader;
 
-    private String fragmentShaderSrc = "#version 330 core\n" +
-            "\n" +
-            "in vec4 fColor;\n" +
-            "\n" +
-            "out vec4 color;\n" +
-            "\n" +
-            "void main()\n" +
-            "{\n" +
-            "    color = fColor;\n" +
-            "}";
+    public int textureIndex;
 
-    public void render(int x, int y, int width, int height) {
-        int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, vertexShaderSrc);
-        glCompileShader(vertexShader);
+    String vertexPath = "src/main/resources/defaultVertex.glsl";
+    String fragmentPath = "src/main/resources/defaultFragment.glsl";
 
-        int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, fragmentShaderSrc);
-        glCompileShader(fragmentShader);
+    Texture(String imagePath, Engine engine) throws IOException {
+        textureIndex = engine.textureIndex;
+        engine.textureIndex += 1;
 
-        int shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexShader);
-        glAttachShader(shaderProgram, fragmentShader);
-        glLinkProgram(shaderProgram);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        this.shader = new Shader(
+            Engine.loadAsString(vertexPath), Engine.loadAsString(fragmentPath)
+        );
+
+        int texture = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        IntBuffer width = BufferUtils.createIntBuffer(1);
+        IntBuffer height = BufferUtils.createIntBuffer(1);
+        IntBuffer channels = BufferUtils.createIntBuffer(1);
+        ByteBuffer image = stbi_load(imagePath, width, height, channels, 0);
+
+        if (image != null) {
+            if (channels.get(0) == 3) {
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0),
+                        0, GL_RGB, GL_UNSIGNED_BYTE, image);
+            } else if (channels.get(0) == 4) {
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0),
+                        0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+            } else {
+                assert false : "Error: (Texture) Unknown number of channesl '" + channels.get(0) + "'";
+            }
+        } else {
+            assert false : "Error: (Texture) Could not load image '" + imagePath + "'";
+        }
+
+        stbi_image_free(image);
+
+        int texVar = glGetUniformLocation(shader.shaderProgram, "tex0");
+        glUseProgram(shader.shaderProgram);
+        glUniform1i(texVar, 0);
+    }
+
+    public void render(float x, float y, float width, float height) {
+        // float renderX = x / (1000 / 2);
+        // float renderY = y / (800 / 2);
+    
+        // float _y = (height/800) * 2;
+        // float _x = (width/1000) * 2;
+    
+        // float __y = (height/800);
+        // float __x = (width/1000);
+    
+        // float vertices[] = {
+        //     (renderX - _x / 2) + __x,      (renderY + _y -  _y / 2) + __y, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+        //     (renderX - _x / 2) + __x,      (renderY - _y / 2)       + __y, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        //     (renderX + _x - _x / 2) + __x, (renderY - _y / 2) + __y,       0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        //     (renderX + _x - _x / 2) + __x, (renderY + _y - _y / 2)  + __y, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+        // };
         float vertices[] = {
-             0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f, // Bottom right 0
-            -0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f, // Top left     1
-             0.5f,  0.5f, 0.0f , 1.0f, 0.0f, 1.0f, 1.0f, // Top right    2
-            -0.5f, -0.5f, 0.0f,  1.0f, 1.0f, 0.0f, 1.0f, // Bottom left  3
+             x,                 y + (height / 800), 0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           0.0f, 0.0f,
+             x,                 y,                  0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           0.0f, 1.0f, 
+             x + (width / 800), y,                  0.0f ,          0.0f, 0.0f, 0.0f, 0.0f,           1.0f, 1.0f,
+             x + (width / 800), y + (height / 800), 0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           1.0f, 0.0f
         };
 
         int[] indices = {
-            2, 1, 0, // Top right triangle
-            0, 1, 3 // bottom left triangle
+            0, 2, 1,
+            0, 3, 2,
         };
 
-        int vaoID = glGenVertexArrays();
-        glBindVertexArray(vaoID);
+        int vao = glGenVertexArrays();
+        glBindVertexArray(vao);
 
-        // Create a float buffer of vertices
         FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(vertices.length);
         vertexBuffer.put(vertices).flip();
 
-        // Create VBO upload the vertex buffer
-        int vboID = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
+        int vbo = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
 
         IntBuffer elementBuffer = BufferUtils.createIntBuffer(indices.length);
         elementBuffer.put(indices).flip();
 
-        int eboID = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
+        int ebo = glGenBuffers();
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementBuffer, GL_STATIC_DRAW);
 
-        // Add the vertex attribute pointers
         int positionsSize = 3;
         int colorSize = 4;
+        int texCoordSize = 2;
+
         int floatSizeBytes = 4;
-        int vertexSizeBytes = (positionsSize + colorSize) * floatSizeBytes;
+        int vertexSizeBytes = (positionsSize + colorSize + texCoordSize) * floatSizeBytes;
         glVertexAttribPointer(0, positionsSize, GL_FLOAT, false, vertexSizeBytes, 0);
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, colorSize, GL_FLOAT, false, vertexSizeBytes, positionsSize * floatSizeBytes);
+        glVertexAttribPointer(1, colorSize, GL_FLOAT, false, vertexSizeBytes, positionsSize * Float.BYTES);
         glEnableVertexAttribArray(1);
 
-        glUseProgram(shaderProgram);
-        // Bind the VAO that we're using
-        glBindVertexArray(vaoID);
+        glVertexAttribPointer(2, texCoordSize, GL_FLOAT, false, vertexSizeBytes, (positionsSize + colorSize) * Float.BYTES);
+        glEnableVertexAttribArray(2);
 
-        // Enable the vertex attribute pointers
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
+        glUseProgram(shader.shaderProgram);
+        glBindTexture(GL_TEXTURE_2D, textureIndex);
+        glBindVertexArray(vao);
 
         glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
-
-        // Unbind everything
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-
-        glBindVertexArray(0);
-
-        glUseProgram(0);
     }
 }

@@ -1,6 +1,5 @@
 package org.example;
 
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
@@ -8,9 +7,24 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.*;
+import java.nio.*;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.util.*;
+
+
+import static org.lwjgl.BufferUtils.*;
+import org.lwjgl.*;
+
 public class Engine {
     public long window;
     int[] keys = new int[256];
+    public int textureIndex = 1;
     public void init() {
         GLFWErrorCallback.createPrint(System.err).set();
         glfwInit();
@@ -21,7 +35,7 @@ public class Engine {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
         // Create the window
-        window = glfwCreateWindow(1000, 800, "Game", NULL, NULL);
+        window = glfwCreateWindow(800, 800, "Game", NULL, NULL);
 
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
@@ -52,5 +66,11 @@ public class Engine {
     public boolean getKey(int keyCode) {
         if (keys[keyCode] == 1) return true;
         return false;
+    }
+
+    public static String loadAsString(String filePath) throws IOException {
+        Path fileName = Path.of(filePath);
+        String str = Files.readString(fileName);
+        return str;
     }
 }
