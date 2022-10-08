@@ -102,14 +102,14 @@ public class Texture {
         
         // FloatBuffer matrixBuffer = createFloatBuffer(16);
         // trans.get(matrixBuffer);
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
         try {
-            MemoryStack stack = MemoryStack.stackPush();
             Vector3f center = new Vector3f(x, y, 0.0f);
 
             FloatBuffer matrixBuffer = new Matrix4f().translate(center)
                 .rotate(Engine.degToRad(rotation), 0.0f, 0.0f, 1.0f)
                 .translate(center.negate())
-                .get(stack.mallocFloat(16));
+                .get(buffer);
                 
             shader.uploadMatrix("transform", matrixBuffer);
         } catch (Exception e) {
@@ -140,6 +140,7 @@ public class Texture {
 
         backEndRender(vertices, indices);
     }
+
 
 
     private void backEndRender(float[] vertices, int[] indices) {

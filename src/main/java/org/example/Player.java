@@ -67,11 +67,18 @@ public class Player extends Entity{
         }
     }
 
-    float rot = 0;
-    
+    public void handleMouseClicks() {
+        if (engine.getMouseClicks(GLFW_MOUSE_BUTTON_LEFT)) {
+            double mousePos[] = engine.getMousePos();
+            double angle = Math.toDegrees(Math.atan2(x - mousePos[0], y - mousePos[1]));
+
+            x += Math.cos(angle) * 10;
+            y += Math.sin(angle) * 10;
+        }
+    }
+
     @Override
     public void draw() {
-        rot += 1;
         if (engine.getMousePos()[0] > x) {
             flipped = false;
         }
@@ -82,6 +89,8 @@ public class Player extends Entity{
         animationIndex = super.animate(currentAnimation, animationIndex, 8);
         currentAnimation[animationIndex / 8].render(x, y, 256, 256, flipped, 0);
 
+        currentAnimation[animationIndex / 8].render(10, 10, 256, 256, flipped, 0);
+
         double mousePos[] = engine.getMousePos();
         double angle = Math.toDegrees(Math.atan2(mousePos[0], mousePos[1]));
         weaponImg.render(x+100, y+50, 128, 128, false, (float)angle + 220);
@@ -89,6 +98,7 @@ public class Player extends Entity{
 
     @Override
     public void update() {
+        handleMouseClicks();
         handleInput();
         handleAnimationState();
         draw();

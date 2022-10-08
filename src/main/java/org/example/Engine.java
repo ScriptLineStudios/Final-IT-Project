@@ -24,6 +24,8 @@ import org.lwjgl.*;
 public class Engine {
     public long window;
     int[] keys = new int[512];
+    int[] mouseClicks = new int[3];
+
     public int textureIndex = 1;
 
     double lastFrame;
@@ -48,6 +50,10 @@ public class Engine {
             else if (action == GLFW_RELEASE){
                 keys[key] = 0;
             }
+        });
+
+        glfwSetMouseButtonCallback(window, (window, button, action, mods) -> {
+            mouseClicks[button] = action;
         });
 
         glfwMakeContextCurrent(window);
@@ -102,8 +108,38 @@ public class Engine {
         double mousePos[] = {xPos.get(0) - 800 / 2, yPos.get(0) - 800 / 2};
         return mousePos;
     }
+    
+    public boolean getMouseClicks(int mouseCode) {
+        if (mouseClicks[mouseCode] == 1) {
+            return true;
+        } 
+        else {
+            return false;
+        }
+    }
 
     public static float degToRad(float deg) {
         return (float)(deg * 3.14159265 / 180);
+    }
+
+    public boolean collideRects(float[] rect1, float[] rect2) {
+        float rect1_x = rect1[0];
+        float rect1_y = rect1[1];
+        float rect1_w = rect1[2];
+        float rect1_h = rect1[3];
+        
+        float rect2_x = rect2[0];
+        float rect2_y = rect2[1];
+        float rect2_w = rect2[2];
+        float rect2_h = rect2[3];
+
+        if (rect1_x     < rect2_x     + rect2_w &&
+        rect1_x     + rect1_w > rect2_x     &&
+        rect1_y    < rect2_y     + rect2_h &&
+        rect1_h + rect1_y     > rect2_y) {
+            return true;
+        }
+        
+        return false;
     }
 }
