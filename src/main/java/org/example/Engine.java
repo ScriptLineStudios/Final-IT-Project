@@ -94,4 +94,12 @@ public class Engine {
         return new Texture(path, this);
     }
 
+    public double[] getMousePos() {
+        DoubleBuffer xPos = BufferUtils.createDoubleBuffer(1);
+        DoubleBuffer yPos = BufferUtils.createDoubleBuffer(1);
+
+        glfwGetCursorPos(window, xPos, yPos);
+        double mousePos[] = {xPos.get(0) - 800 / 2, yPos.get(0) - 800 / 2};
+        return mousePos;
+    }
 }

@@ -38,12 +38,10 @@ public class Player extends Entity{
         if (engine.getKey(GLFW_KEY_D)) {
             x += moveSpeed * dt;
             moving = true;
-            flipped = false;
         }
         if (engine.getKey(GLFW_KEY_A)) {
             x -= moveSpeed * dt;
             moving = true;
-            flipped = true;
         }
 
         if (engine.getKey(GLFW_KEY_W)) {
@@ -68,6 +66,9 @@ public class Player extends Entity{
 
     @Override
     public void draw() {
+        if (engine.getMousePos()[0] > x) flipped = false;
+        else flipped = true;
+
         animationIndex = super.animate(currentAnimation, animationIndex, 8);
         currentAnimation[animationIndex / 8].render(x, y, 256, 256, flipped);
     }
