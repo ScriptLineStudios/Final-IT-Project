@@ -92,8 +92,8 @@ public class Player extends Entity{
         currentAnimation[animationIndex / 8].render(10, 10, 256, 256, flipped, 0);
 
         double mousePos[] = engine.getMousePos();
-        double angle = Math.toDegrees(Math.atan2(mousePos[0], mousePos[1]));
-        weaponImg.render(x+100, y+50, 128, 128, false, (float)angle + 220);
+        double angle = Math.toDegrees(Math.atan2(x - mousePos[0], y - mousePos[1]));
+        weaponImg.render(x+100, y+50, 128, 128, false, (float)angle + 45);
     }
 
     @Override

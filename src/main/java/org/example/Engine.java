@@ -105,7 +105,7 @@ public class Engine {
         DoubleBuffer yPos = BufferUtils.createDoubleBuffer(1);
 
         glfwGetCursorPos(window, xPos, yPos);
-        double mousePos[] = {xPos.get(0) - 800 / 2, yPos.get(0) - 800 / 2};
+        double mousePos[] = {(xPos.get(0) - 400) * 2, (yPos.get(0) - 400) * 2};
         return mousePos;
     }
     
