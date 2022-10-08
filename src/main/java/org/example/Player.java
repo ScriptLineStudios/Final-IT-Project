@@ -12,6 +12,8 @@ public class Player extends Entity{
 
     Texture weaponImg;
 
+    float[] camera;
+
     Player(float playerX, float playerY, Engine _engine) throws IOException {
         super(playerX, playerY, 600);
 
@@ -21,16 +23,17 @@ public class Player extends Entity{
                                     engine.loadTex("src/main/resources/assets/images/player/player_idle3.png"),
                                     engine.loadTex("src/main/resources/assets/images/player/player_idle4.png"),
                                     engine.loadTex("src/main/resources/assets/images/player/player_idle5.png"),
-                                    engine.loadTex("src/main/resources/assets/images/player/player_idle6.png"),
         };
 
         walkAnimations = new Texture[]{engine.loadTex("src/main/resources/assets/images/player/player_walk1.png"),
                                         engine.loadTex("src/main/resources/assets/images/player/player_walk2.png"),
                                         engine.loadTex("src/main/resources/assets/images/player/player_walk3.png"),
+                                        engine.loadTex("src/main/resources/assets/images/player/player_walk4.png"),
         };
 
         currentAnimation = idleAnimations;
         weaponImg = engine.loadTex("src/main/resources/assets/images/weapons/basic_sword.png");
+        camera = new float[]{0.0f, 0.0f};
     }
 
     @Override
@@ -55,6 +58,9 @@ public class Player extends Entity{
             y -= moveSpeed * dt;
             moving = true;
         }
+
+        camera[0] += (x - camera[0]) / 17;
+        camera[1] += (y - camera[1]) / 17;
     }
 
     @Override
@@ -70,10 +76,7 @@ public class Player extends Entity{
     public void handleMouseClicks() {
         if (engine.getMouseClicks(GLFW_MOUSE_BUTTON_LEFT)) {
             double mousePos[] = engine.getMousePos();
-            double angle = Math.toDegrees(Math.atan2(x - mousePos[0], y - mousePos[1]));
-
-            x += Math.cos(angle) * 10;
-            y += Math.sin(angle) * 10;
+            double angle = Math.toDegrees(Math.atan2(mousePos[0] - x, mousePos[1] + y));
         }
     }
 
@@ -87,13 +90,11 @@ public class Player extends Entity{
         } 
 
         animationIndex = super.animate(currentAnimation, animationIndex, 8);
-        currentAnimation[animationIndex / 8].render(x, y, 256, 256, flipped, 0);
-
-        currentAnimation[animationIndex / 8].render(10, 10, 256, 256, flipped, 0);
+        currentAnimation[animationIndex / 8].render(x - camera[0], y - camera[1], 256, 256, flipped, 0);
 
         double mousePos[] = engine.getMousePos();
-        double angle = Math.toDegrees(Math.atan2(mousePos[0] - x, mousePos[1] + y));
-        weaponImg.render(x+100, y+50, 128, 128, false, (float)angle - 120);
+        double angle = Math.toDegrees(Math.atan2(mousePos[0] - (x - camera[0]), mousePos[1] + (y - camera[1])));
+        weaponImg.render(x+100 - camera[0], y+50 - camera[1], 128, 128, false, (float)angle - 110);
     }
 
     @Override
