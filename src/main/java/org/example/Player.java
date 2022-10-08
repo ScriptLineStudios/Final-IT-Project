@@ -11,7 +11,7 @@ public class Player extends Entity{
     Texture currentAnimation[];
 
     Player(float playerX, float playerY, Engine _engine) throws IOException {
-        super(playerX, playerY, 500);
+        super(playerX, playerY, 600);
 
         this.engine = _engine;
         idleAnimations = new Texture[]{engine.loadTex("src/main/resources/assets/images/player/player_idle1.png"),
@@ -38,10 +38,12 @@ public class Player extends Entity{
         if (engine.getKey(GLFW_KEY_D)) {
             x += moveSpeed * dt;
             moving = true;
+            flipped = false;
         }
         if (engine.getKey(GLFW_KEY_A)) {
             x -= moveSpeed * dt;
             moving = true;
+            flipped = true;
         }
 
         if (engine.getKey(GLFW_KEY_W)) {
@@ -67,7 +69,7 @@ public class Player extends Entity{
     @Override
     public void draw() {
         animationIndex = super.animate(currentAnimation, animationIndex, 8);
-        currentAnimation[animationIndex / 8].render(x, y, 256, 256);
+        currentAnimation[animationIndex / 8].render(x, y, 256, 256, flipped);
     }
 
     @Override

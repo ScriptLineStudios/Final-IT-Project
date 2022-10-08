@@ -5,7 +5,8 @@ public class Entity {
 
     public float x, y;
     public float moveSpeed;
-    boolean moving;
+    public boolean moving;
+    public boolean flipped;
 
     Entity(float _x, float _y, float _moveSpeed) {
         this.x = _x;
@@ -13,6 +14,7 @@ public class Entity {
         this.moveSpeed = _moveSpeed;
         this.moving = false;
         this.animationIndex = 0;
+        this.flipped = false;
     }
 
     public int animate(Texture[] texArray, int animationIndex, int timeToDisplay) {

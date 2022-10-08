@@ -83,6 +83,41 @@ public class Texture {
             0, 3, 2,
         };
 
+        backEndRender(vertices, indices);
+    }
+
+    public void render(float _x, float _y, float width, float height, boolean flipped) {
+        float x = _x / 800;
+        float y = _y / 800;
+
+        float vertices[];
+
+        if (flipped) {
+            vertices = new float[]{
+                 x,                 y + (height / 800), 0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           1.0f, 0.0f,
+                 x,                 y,                  0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           1.0f, 1.0f, 
+                 x + (width / 800), y,                  0.0f ,          0.0f, 0.0f, 0.0f, 0.0f,           0.0f, 1.0f,
+                 x + (width / 800), y + (height / 800), 0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           0.0f, 0.0f
+            };
+        }
+        else {
+            vertices = new float[]{
+                x,                 y + (height / 800), 0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           0.0f, 0.0f,
+                x,                 y,                  0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           0.0f, 1.0f, 
+                x + (width / 800), y,                  0.0f ,          0.0f, 0.0f, 0.0f, 0.0f,           1.0f, 1.0f,
+                x + (width / 800), y + (height / 800), 0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           1.0f, 0.0f
+           };
+        }
+
+        int[] indices = {
+            0, 2, 1,
+            0, 3, 2,
+        };
+
+        backEndRender(vertices, indices);
+    }
+
+    private void backEndRender(float[] vertices, int[] indices) {
         int vao = glGenVertexArrays();
         glBindVertexArray(vao);
 
