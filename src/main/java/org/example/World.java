@@ -5,13 +5,15 @@ import java.util.List;
 
 public class World {
     public static List<float[]> generateArea() {
-        SimplexNoise noiseGen = new SimplexNoise(10, 5.0f, 123445);
+        ParseJson.parse();
         List<float[]> world = new ArrayList<float[]>();  
-        for (int y = -800; y < 800; y+=256) {
-            for (int x = -800; x < 800; x+=256) {
-                double val = noiseGen.getNoise2D(x, y);
-                if (val > 200) {
-                    world.add(new float[]{x, y});
+        SimplexNoise noise = new SimplexNoise(4, 500, 4);
+        for (int y = -10; y < 10; y+=1) {
+            for (int x = -10; x < 10; x+=1) {
+                double val = noise.getNoise2D(x, y);
+                //System.out.println(val);
+                if (val > 100) {
+                    world.add(new float[]{x*64, y*64});
                 }
             }
         }

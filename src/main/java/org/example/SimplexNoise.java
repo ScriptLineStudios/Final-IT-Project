@@ -23,7 +23,7 @@ public class SimplexNoise {
 
         // recieves a number (eg 128) and calculates what power of 2 it is (eg 2^7)
         // Math.ceil(7) = 7 = numberOfOctaves
-        int numberOfOctaves = (int)Math.ceil(Math.log10(this.largestFeature)/Math.log10(2));
+        int numberOfOctaves = 40;
 
         octaves = new SimplexNoiseOctave[numberOfOctaves];
         frequencys = new double[numberOfOctaves];

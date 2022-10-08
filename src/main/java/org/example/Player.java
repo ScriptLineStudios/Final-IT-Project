@@ -82,7 +82,7 @@ public class Player extends Entity{
 
     @Override
     public void draw() {
-        if (engine.getMousePos()[0] > x) {
+        if (engine.getMousePos()[0] > x - camera[0]) {
             flipped = false;
         }
         else {

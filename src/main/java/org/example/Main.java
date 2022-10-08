@@ -16,7 +16,7 @@ public class Main {
             engine.clear(0.1f, 0.1f, 0.1f);
 
             for (float[] pos:world) {
-                block.render(pos[0] - player.camera[0], pos[1] - player.camera[1], 256, 256, false, 0);
+                block.render(pos[0] - player.camera[0], pos[1] - player.camera[1], 64, 64, false, 0);
             }
 
             player.update();

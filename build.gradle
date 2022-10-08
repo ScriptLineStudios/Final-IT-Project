@@ -13,6 +13,7 @@ repositories {
 dependencies {
     implementation platform("org.lwjgl:lwjgl-bom:3.3.2-SNAPSHOT")
     
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation "org.joml:joml:1.0.0"
     implementation "org.lwjgl:lwjgl"
     implementation "org.lwjgl:lwjgl-assimp"
