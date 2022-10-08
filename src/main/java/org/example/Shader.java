@@ -25,8 +25,14 @@ public class Shader {
     }
 
     public void uploadTexture(String name, int index) {
-        int texVar = glGetUniformLocation(shaderProgram, "tex0");
+        int texVar = glGetUniformLocation(shaderProgram, name);
         glUseProgram(shaderProgram);
         glUniform1i(texVar, 0);
+    }
+
+    public void uploadFloat(String name, float value) {
+        int texVar = glGetUniformLocation(shaderProgram, name);
+        glUseProgram(shaderProgram);
+        glUniform1f(texVar, value);
     }
 }

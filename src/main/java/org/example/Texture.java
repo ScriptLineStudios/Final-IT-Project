@@ -9,6 +9,7 @@ import java.nio.IntBuffer;
 import java.io.*;
 import java.nio.*;
 import java.util.*;
+import org.lwjgl.opengl.*;
 
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -86,11 +87,12 @@ public class Texture {
         backEndRender(vertices, indices);
     }
 
-    public void render(float _x, float _y, float width, float height, boolean flipped) {
+    public void render(float _x, float _y, float width, float height, boolean flipped, float rotation) {
         float x = _x / 800;
         float y = _y / 800;
 
         float vertices[];
+        shader.uploadFloat("angle", Engine.degToRad(rotation));
 
         if (flipped) {
             vertices = new float[]{
@@ -116,6 +118,7 @@ public class Texture {
 
         backEndRender(vertices, indices);
     }
+
 
     private void backEndRender(float[] vertices, int[] indices) {
         int vao = glGenVertexArrays();

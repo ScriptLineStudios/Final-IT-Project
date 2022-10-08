@@ -63,14 +63,17 @@ public class Player extends Entity{
             currentAnimation = idleAnimations;
         }
     }
-
     @Override
     public void draw() {
-        if (engine.getMousePos()[0] > x) flipped = false;
-        else flipped = true;
+        if (engine.getMousePos()[0] > x) {
+            flipped = false;
+        }
+        else {
+            flipped = true;
+        } 
 
         animationIndex = super.animate(currentAnimation, animationIndex, 8);
-        currentAnimation[animationIndex / 8].render(x, y, 256, 256, flipped);
+        currentAnimation[animationIndex / 8].render(x, y, 256, 256, flipped, 0.0f);
     }
 
     @Override

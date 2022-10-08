@@ -102,4 +102,8 @@ public class Engine {
         double mousePos[] = {xPos.get(0) - 800 / 2, yPos.get(0) - 800 / 2};
         return mousePos;
     }
+
+    public static float degToRad(float deg) {
+        return (float)(deg * 3.14159265 / 180);
+    }
 }
