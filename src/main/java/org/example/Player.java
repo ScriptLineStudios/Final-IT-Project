@@ -1,14 +1,17 @@
 package org.example;
 
 import java.io.IOException;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class Player extends Entity{
     Engine engine;
 
     Texture idleAnimations[];
+    Texture walkAnimations[];
+    Texture currentAnimation[];
 
-    Player(Engine _engine) throws IOException {
-        super();
+    Player(float playerX, float playerY, Engine _engine) throws IOException {
+        super(playerX, playerY, 500);
 
         this.engine = _engine;
         idleAnimations = new Texture[]{engine.loadTex("src/main/resources/assets/images/player/player_idle1.png"),
@@ -19,12 +22,59 @@ public class Player extends Entity{
                                     engine.loadTex("src/main/resources/assets/images/player/player_idle6.png"),
         };
 
+        walkAnimations = new Texture[]{engine.loadTex("src/main/resources/assets/images/player/player_walk1.png"),
+                                        engine.loadTex("src/main/resources/assets/images/player/player_walk2.png"),
+                                        engine.loadTex("src/main/resources/assets/images/player/player_walk3.png"),
+        };
+
+        currentAnimation = idleAnimations;
     }
-    
+
+    @Override
+    public void handleInput() {
+        double dt = engine.getDeltaTime();
+        moving = false;
+
+        if (engine.getKey(GLFW_KEY_D)) {
+            x += moveSpeed * dt;
+            moving = true;
+        }
+        if (engine.getKey(GLFW_KEY_A)) {
+            x -= moveSpeed * dt;
+            moving = true;
+        }
+
+        if (engine.getKey(GLFW_KEY_W)) {
+            y += moveSpeed * dt;
+            moving = true;
+        }
+        if (engine.getKey(GLFW_KEY_S)) {
+            y -= moveSpeed * dt;
+            moving = true;
+        }
+    }
+
+    @Override
+    public void handleAnimationState() {
+        if (moving) {
+            currentAnimation = walkAnimations;
+        }
+        else {
+            currentAnimation = idleAnimations;
+        }
+    }
+
     @Override
     public void draw() {
-        animationIndex = super.animate(idleAnimations, animationIndex, 8);
-        idleAnimations[animationIndex / 8].render(0, 0, 256, 256);
+        animationIndex = super.animate(currentAnimation, animationIndex, 8);
+        currentAnimation[animationIndex / 8].render(x, y, 256, 256);
+    }
+
+    @Override
+    public void update() {
+        handleInput();
+        handleAnimationState();
+        draw();
     }
 
 }

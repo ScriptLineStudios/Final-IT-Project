@@ -1,5 +1,4 @@
 package org.example;
-import static org.lwjgl.glfw.GLFW.*;
 
 import java.io.IOException;
 
@@ -8,11 +7,11 @@ public class Main {
     
     private void run() throws IOException {
         engine.init();
-        Player player = new Player(engine);
+        Player player = new Player(0.0f, 0.0f, engine);
         while (engine.windowOpen()) {
             engine.clear(0.1f, 0.1f, 0.1f);
 
-            player.draw();
+            player.update();
             engine.update();
         }
     }

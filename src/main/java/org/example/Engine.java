@@ -25,6 +25,9 @@ public class Engine {
     public long window;
     int[] keys = new int[512];
     public int textureIndex = 1;
+
+    double lastFrame;
+    double deltaTime;
     public void init() {
         GLFWErrorCallback.createPrint(System.err).set();
         glfwInit();
@@ -51,6 +54,7 @@ public class Engine {
         glfwSwapInterval(1);
         glfwShowWindow(window);
         GL.createCapabilities();
+        lastFrame = glfwGetTime();
     }
 
     public void clear(float r, float g, float b) {
@@ -59,6 +63,10 @@ public class Engine {
     }
 
     public void update() {
+        double currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -70,6 +78,10 @@ public class Engine {
     public boolean getKey(int keyCode) {
         if (keys[keyCode] == 1) return true;
         return false;
+    }
+
+    public double getDeltaTime() {
+        return deltaTime;
     }
 
     public static String loadAsString(String filePath) throws IOException {

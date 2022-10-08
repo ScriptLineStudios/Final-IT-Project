@@ -67,7 +67,10 @@ public class Texture {
         shader.uploadTexture("tex0", textureIndex);
     }
 
-    public void render(float x, float y, float width, float height) {
+    public void render(float _x, float _y, float width, float height) {
+        float x = _x / 800;
+        float y = _y / 800;
+
         float vertices[] = {
              x,                 y + (height / 800), 0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           0.0f, 0.0f,
              x,                 y,                  0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           0.0f, 1.0f, 
