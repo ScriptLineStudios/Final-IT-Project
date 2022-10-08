@@ -2,6 +2,11 @@ package org.example;
 
 import static org.lwjgl.opengl.GL20.*;
 
+import java.nio.FloatBuffer;
+
+import org.joml.*;
+import org.joml.Math;
+
 public class Shader {
     String vertexSource, fragmentSource;
 
@@ -34,5 +39,11 @@ public class Shader {
         int texVar = glGetUniformLocation(shaderProgram, name);
         glUseProgram(shaderProgram);
         glUniform1f(texVar, value);
+    }
+
+    public void uploadMatrix(String name, FloatBuffer value) {
+        int texVar = glGetUniformLocation(shaderProgram, name);
+        glUseProgram(shaderProgram);
+        glUniformMatrix4fv(texVar, false, value);
     }
 }

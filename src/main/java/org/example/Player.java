@@ -10,6 +10,8 @@ public class Player extends Entity{
     Texture walkAnimations[];
     Texture currentAnimation[];
 
+    Texture weaponImg;
+
     Player(float playerX, float playerY, Engine _engine) throws IOException {
         super(playerX, playerY, 600);
 
@@ -28,6 +30,7 @@ public class Player extends Entity{
         };
 
         currentAnimation = idleAnimations;
+        weaponImg = engine.loadTex("src/main/resources/assets/images/weapons/basic_sword.png");
     }
 
     @Override
@@ -63,8 +66,12 @@ public class Player extends Entity{
             currentAnimation = idleAnimations;
         }
     }
+
+    float rot = 0;
+    
     @Override
     public void draw() {
+        rot += 1;
         if (engine.getMousePos()[0] > x) {
             flipped = false;
         }
@@ -73,7 +80,11 @@ public class Player extends Entity{
         } 
 
         animationIndex = super.animate(currentAnimation, animationIndex, 8);
-        currentAnimation[animationIndex / 8].render(x, y, 256, 256, flipped, 0.0f);
+        currentAnimation[animationIndex / 8].render(x, y, 256, 256, flipped, 0);
+
+        double mousePos[] = engine.getMousePos();
+        double angle = Math.toDegrees(Math.atan2(mousePos[0] - x, mousePos[1] - y));
+        weaponImg.render(x, y, 128, 128, false, (float)angle + 270.0f);
     }
 
     @Override

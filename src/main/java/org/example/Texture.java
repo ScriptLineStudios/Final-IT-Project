@@ -10,12 +10,15 @@ import java.io.*;
 import java.nio.*;
 import java.util.*;
 import org.lwjgl.opengl.*;
+import org.lwjgl.system.MemoryStack;
 
-import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.stb.STBImage.stbi_load;
 import static org.lwjgl.stb.STBImageResize.*;
+
+import org.joml.*;
+import org.joml.Math;
 
 public class Texture {
     public Shader shader;
@@ -75,7 +78,7 @@ public class Texture {
         float vertices[] = {
              x,                 y + (height / 800), 0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           0.0f, 0.0f,
              x,                 y,                  0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           0.0f, 1.0f, 
-             x + (width / 800), y,                  0.0f ,          0.0f, 0.0f, 0.0f, 0.0f,           1.0f, 1.0f,
+             x + (width / 800), y,                  0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           1.0f, 1.0f,
              x + (width / 800), y + (height / 800), 0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           1.0f, 0.0f
         };
 
@@ -92,7 +95,26 @@ public class Texture {
         float y = _y / 800;
 
         float vertices[];
-        shader.uploadFloat("angle", Engine.degToRad(rotation));
+//        shader.uploadFloat("angle", Engine.degToRad(rotation));
+
+        //Matrix4f trans = new Matrix4f().rotate(Engine.degToRad(rotation), 0.0f, 0.0f, 1.0f).scale(0.5f, 0.5f, 0.5f);
+        // Matrix4f trans = new Matrix4f();
+        
+        // FloatBuffer matrixBuffer = createFloatBuffer(16);
+        // trans.get(matrixBuffer);
+        try {
+            MemoryStack stack = MemoryStack.stackPush();
+            Vector3f center = new Vector3f(x, y, 0.0f);
+
+            FloatBuffer matrixBuffer = new Matrix4f().translate(center)
+                .rotate(Engine.degToRad(rotation), 0.0f, 0.0f, 1.0f)
+                .translate(center.negate())
+                .get(stack.mallocFloat(16));
+                
+            shader.uploadMatrix("transform", matrixBuffer);
+        } catch (Exception e) {
+            System.out.println("Error... " + e);
+        }
 
         if (flipped) {
             vertices = new float[]{
