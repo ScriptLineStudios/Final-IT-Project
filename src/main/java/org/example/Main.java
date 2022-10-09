@@ -16,10 +16,25 @@ public class Main {
 
         Texture block = engine.loadTex("src/main/resources/assets/images/block.png");
         Texture grass = engine.loadTex("src/main/resources/assets/images/grass.png");
+        Texture grass_left = engine.loadTex("src/main/resources/assets/images/left.png");
+        Texture grass_left_corner = engine.loadTex("src/main/resources/assets/images/left_corner.png");
+        Texture top = engine.loadTex("src/main/resources/assets/images/top.png");
+        Texture grass_right_corner = engine.loadTex("src/main/resources/assets/images/right_corner.png");
+        Texture grass_right = engine.loadTex("src/main/resources/assets/images/right.png");
+
+        
+
 
         HashMap<String, Texture> blockLookup = new HashMap<String, Texture>();
         blockLookup.put("block.png", block);
         blockLookup.put("grass.png", grass);
+        blockLookup.put("left.png", grass_left);
+        blockLookup.put("left_corner.png", grass_left_corner);
+        blockLookup.put("top.png", top);
+        blockLookup.put("right.png", grass_right);
+        blockLookup.put("right_corner.png", grass_right_corner);
+        
+
 
         while (engine.windowOpen()) {
             engine.clear(0.1f, 0.1f, 0.1f);
