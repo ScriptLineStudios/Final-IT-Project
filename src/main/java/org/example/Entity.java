@@ -33,7 +33,7 @@ public class Entity {
         return y;
     }
 
-    public void handleInput() {
+    public void handleInput(Main game) {
         
     }
 
@@ -45,7 +45,7 @@ public class Entity {
 
     }
 
-    public void update() {
+    public void update(Main game) {
 
     }
 }

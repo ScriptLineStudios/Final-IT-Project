@@ -8,10 +8,10 @@ import java.util.HashMap;
 
 public class Main {
     Engine engine = new Engine();
-    
+    public List<Object[]> world;
     private void run() throws ParseException, IOException, FileNotFoundException {
         engine.init();
-        List<Object[]> world = World.generateArea();
+        world = World.generateArea();
         Player player = new Player(0.0f, 0.0f, engine);
 
         Texture block = engine.loadTex("src/main/resources/assets/images/block.png");
@@ -23,8 +23,6 @@ public class Main {
         Texture grass_right = engine.loadTex("src/main/resources/assets/images/right.png");
 
         
-
-
         HashMap<String, Texture> blockLookup = new HashMap<String, Texture>();
         blockLookup.put("block.png", block);
         blockLookup.put("grass.png", grass);
@@ -37,13 +35,13 @@ public class Main {
 
 
         while (engine.windowOpen()) {
-            engine.clear(0.1f, 0.1f, 0.1f);
+            engine.clear(65 / 255.0f, 85 / 255.0f, 27 / 255.0f);
 
             for (Object[] pos:world) {
                 blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 16 * 4, 16 * 4);
             }
 
-            player.update();
+            player.update(this);
             engine.update();
         }
     }

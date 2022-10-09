@@ -1,6 +1,9 @@
 package org.example;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Player extends Entity{
@@ -36,28 +39,68 @@ public class Player extends Entity{
         camera = new float[]{0.0f, 0.0f};
     }
 
+    private List<Object[]> getCollidingTiles(List<Object[]> world) {
+        List<Object[]> collidingTiles = new ArrayList<Object[]>();
+        for (Object[] pos:world) {
+            float[] tileRect = new float[]{(float)pos[0], (float)pos[1], 64, 64};
+            float[] playerRect = new float[]{(float)x, (float)y, 128, 128};
+            
+            if (engine.collideRects(tileRect, playerRect)) {
+                collidingTiles.add(pos);
+            }
+        }
+        return collidingTiles;
+    }
+
+    private void move(float[] playerMovement, List<Object[]> world) {
+        x += playerMovement[0];
+        List<Object[]> collidingTiles = getCollidingTiles(world);
+        for (Object[] pos:collidingTiles) {
+            if (playerMovement[0] > 0) {
+                x = (float)pos[0] - 129;
+            }
+            else if (playerMovement[0] < 0) {
+                x = (float)pos[0] + 65;
+            }
+        }
+
+        y += playerMovement[1];
+        collidingTiles = getCollidingTiles(world);
+        for (Object[] pos:collidingTiles) {
+            if (playerMovement[1] > 0) {
+                y = (float)pos[1] - 128;
+            }
+            else if (playerMovement[1] < 0) {
+                y = (float)pos[1] + 65;
+            }
+        }
+    }
+
     @Override
-    public void handleInput() {
+    public void handleInput(Main game) {
         double dt = engine.getDeltaTime();
         moving = false;
+        float[] playerMovement = new float[]{0.0f, 0.0f};
 
         if (engine.getKey(GLFW_KEY_D)) {
-            x += moveSpeed * dt;
+            playerMovement[0] += moveSpeed * dt;
             moving = true;
         }
         if (engine.getKey(GLFW_KEY_A)) {
-            x -= moveSpeed * dt;
+            playerMovement[0] -= moveSpeed * dt;
             moving = true;
         }
 
         if (engine.getKey(GLFW_KEY_W)) {
-            y += moveSpeed * dt;
+            playerMovement[1] += moveSpeed * dt;
             moving = true;
         }
         if (engine.getKey(GLFW_KEY_S)) {
-            y -= moveSpeed * dt;
+            playerMovement[1] -= moveSpeed * dt;
             moving = true;
         }
+
+        move(playerMovement, game.world);
 
         camera[0] += (x - camera[0]) / 17;
         camera[1] += (y - camera[1]) / 17;
@@ -98,9 +141,9 @@ public class Player extends Entity{
     }
 
     @Override
-    public void update() {
+    public void update(Main game) {
         handleMouseClicks();
-        handleInput();
+        handleInput(game);
         handleAnimationState();
         draw();
     }
