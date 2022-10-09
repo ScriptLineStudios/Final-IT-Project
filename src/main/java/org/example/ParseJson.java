@@ -11,7 +11,6 @@ public class ParseJson {
       Object obj = parser.parse(new FileReader("src/main/resources/assets/images/map.json"));
       JSONObject jsonObject = (JSONObject)obj;
       JSONArray data = (JSONArray)jsonObject.get("map");
-      System.out.println(data.get(0));
       return data;
    }
 }

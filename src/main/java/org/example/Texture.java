@@ -28,6 +28,10 @@ public class Texture {
     String vertexPath = "src/main/resources/defaultVertex.glsl";
     String fragmentPath = "src/main/resources/defaultFragment.glsl";
 
+    int vao;
+    int vbo;
+    int ebo;
+
     Texture(String imagePath, Engine engine) throws IOException {
         textureIndex = engine.textureIndex;
         engine.textureIndex += 1;
@@ -66,9 +70,57 @@ public class Texture {
             assert false : "Error: (Texture) Could not load image '" + imagePath + "'";
         }
 
-//        stbi_image_free(image);
-
+        //        stbi_image_free(image);
         shader.uploadTexture("tex0", textureIndex);
+        vao = glGenVertexArrays();
+        vbo = glGenBuffers();
+        ebo = glGenBuffers();
+
+        //Fill the buffers with garbage data in order to setup the attrib pointers
+        float[] vertices = new float[]{
+            0.0f,                 0.0f, 0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           0.0f, 0.0f,
+            0.0f,                 0.0f,                  0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           0.0f, 1.0f, 
+            0.0f, 0.0f,                  0.0f ,          0.0f, 0.0f, 0.0f, 0.0f,           1.0f, 1.0f,
+            0.0f, 0.0f, 0.0f,           0.0f, 0.0f, 0.0f, 0.0f,           1.0f, 0.0f
+       };
+
+       int[] indices = {
+        0, 2, 1,
+        0, 3, 2,
+        };
+
+        glBindVertexArray(vao);
+        FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(vertices.length);
+        vertexBuffer.put(vertices).flip();
+
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
+
+        IntBuffer elementBuffer = BufferUtils.createIntBuffer(indices.length);
+        elementBuffer.put(indices).flip();
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementBuffer, GL_STATIC_DRAW);
+
+        int positionsSize = 3;
+        int colorSize = 4;
+        int texCoordSize = 2;
+
+        int floatSizeBytes = 4;
+        int vertexSizeBytes = (positionsSize + colorSize + texCoordSize) * floatSizeBytes;
+        glVertexAttribPointer(0, positionsSize, GL_FLOAT, false, vertexSizeBytes, 0);
+        glEnableVertexAttribArray(0);
+
+        glVertexAttribPointer(1, colorSize, GL_FLOAT, false, vertexSizeBytes, positionsSize * Float.BYTES);
+        glEnableVertexAttribArray(1);
+
+        glVertexAttribPointer(2, texCoordSize, GL_FLOAT, false, vertexSizeBytes, (positionsSize + colorSize) * Float.BYTES);
+        glEnableVertexAttribArray(2);
+
+
+
+        glBindVertexArray(0);
+        
     }
 
     public void render(float _x, float _y, float width, float height) {
@@ -95,13 +147,6 @@ public class Texture {
         float y = _y / 800;
 
         float vertices[];
-//        shader.uploadFloat("angle", Engine.degToRad(rotation));
-
-        //Matrix4f trans = new Matrix4f().rotate(Engine.degToRad(rotation), 0.0f, 0.0f, 1.0f).scale(0.5f, 0.5f, 0.5f);
-        // Matrix4f trans = new Matrix4f();
-        
-        // FloatBuffer matrixBuffer = createFloatBuffer(16);
-        // trans.get(matrixBuffer);
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
         try {
             Vector3f center = new Vector3f(x, y, 0.0f);
@@ -144,41 +189,22 @@ public class Texture {
 
 
     private void backEndRender(float[] vertices, int[] indices) {
-        int vao = glGenVertexArrays();
         glBindVertexArray(vao);
 
         FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(vertices.length);
         vertexBuffer.put(vertices).flip();
 
-        int vbo = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
 
         IntBuffer elementBuffer = BufferUtils.createIntBuffer(indices.length);
         elementBuffer.put(indices).flip();
 
-        int ebo = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementBuffer, GL_STATIC_DRAW);
 
-        int positionsSize = 3;
-        int colorSize = 4;
-        int texCoordSize = 2;
-
-        int floatSizeBytes = 4;
-        int vertexSizeBytes = (positionsSize + colorSize + texCoordSize) * floatSizeBytes;
-        glVertexAttribPointer(0, positionsSize, GL_FLOAT, false, vertexSizeBytes, 0);
-        glEnableVertexAttribArray(0);
-
-        glVertexAttribPointer(1, colorSize, GL_FLOAT, false, vertexSizeBytes, positionsSize * Float.BYTES);
-        glEnableVertexAttribArray(1);
-
-        glVertexAttribPointer(2, texCoordSize, GL_FLOAT, false, vertexSizeBytes, (positionsSize + colorSize) * Float.BYTES);
-        glEnableVertexAttribArray(2);
-
         glUseProgram(shader.shaderProgram);
         glBindTexture(GL_TEXTURE_2D, textureIndex);
-        glBindVertexArray(vao);
 
         glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
     }

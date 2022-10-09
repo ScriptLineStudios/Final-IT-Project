@@ -15,7 +15,7 @@ public class Player extends Entity{
     float[] camera;
 
     Player(float playerX, float playerY, Engine _engine) throws IOException {
-        super(playerX, playerY, 600);
+        super(playerX, playerY, 700);
 
         this.engine = _engine;
         idleAnimations = new Texture[]{engine.loadTex("src/main/resources/assets/images/player/player_idle1.png"),
@@ -90,7 +90,7 @@ public class Player extends Entity{
         } 
 
         animationIndex = super.animate(currentAnimation, animationIndex, 8);
-        currentAnimation[animationIndex / 8].render(x - camera[0], y - camera[1], 200, 200, flipped, 0);
+        currentAnimation[animationIndex / 8].render(x - camera[0], y - camera[1], 128, 128, flipped, 0);
 
         double mousePos[] = engine.getMousePos();
         double angle = Math.toDegrees(Math.atan2(mousePos[0] - (x - camera[0]), mousePos[1] + (y - camera[1])));
