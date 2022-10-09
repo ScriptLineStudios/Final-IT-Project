@@ -90,7 +90,7 @@ public class Player extends Entity{
         } 
 
         animationIndex = super.animate(currentAnimation, animationIndex, 8);
-        currentAnimation[animationIndex / 8].render(x - camera[0], y - camera[1], 256, 256, flipped, 0);
+        currentAnimation[animationIndex / 8].render(x - camera[0], y - camera[1], 200, 200, flipped, 0);
 
         double mousePos[] = engine.getMousePos();
         double angle = Math.toDegrees(Math.atan2(mousePos[0] - (x - camera[0]), mousePos[1] + (y - camera[1])));
