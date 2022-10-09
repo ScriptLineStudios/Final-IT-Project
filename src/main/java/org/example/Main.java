@@ -56,8 +56,7 @@ public class Main {
             if ( currentTime - previousTime >= 1.0 )
             {
                 // Display the frame count here any way you want.
-                System.out.println(frameCount);
-        
+                //System.out.printf("FPS: %d\n", frameCount);
                 frameCount = 0;
                 previousTime = currentTime;
             }
@@ -66,6 +65,7 @@ public class Main {
             for (Object[] pos:world) {
                 blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 16 * 4, 16 * 4);
             }
+            
 
             player.update(this);
             engine.update();

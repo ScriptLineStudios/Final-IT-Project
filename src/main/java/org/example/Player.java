@@ -17,6 +17,18 @@ public class Player extends Entity{
 
     float[] camera;
 
+    int weaponOffsetX;
+    int weaponOffsetY;
+    int weaponTimer = 0;
+    int attackX, attackY;
+
+    Texture weaponAttack;
+    Texture whitePlayerImage;
+
+    List<float[]> playerWhiteImages;
+
+    float attack[];
+
     Player(float playerX, float playerY, Engine _engine) throws IOException {
         super(playerX, playerY, 700);
 
@@ -34,9 +46,16 @@ public class Player extends Entity{
                                         engine.loadTex("src/main/resources/assets/images/player/player_walk4.png"),
         };
 
+        whitePlayerImage = engine.loadTex("src/main/resources/assets/images/player_white.png");
+        
         currentAnimation = idleAnimations;
         weaponImg = engine.loadTex("src/main/resources/assets/images/weapons/basic_sword.png");
+        weaponAttack = engine.loadTex("/home/scriptline/Final-IT-Project/src/main/resources/assets/images/weapon_attack.png");
         camera = new float[]{0.0f, 0.0f};
+        weaponOffsetX = 0;
+        weaponOffsetY = 0;
+        attack = new float[]{0, 0};
+        playerWhiteImages = new ArrayList<float[]>();;
     }
 
     private List<Object[]> getCollidingTiles(List<Object[]> world) {
@@ -116,33 +135,80 @@ public class Player extends Entity{
         }
     }
 
-    public void handleMouseClicks() {
+    public void handleMouseClicks(Main game) {
+        double mousePos[] = engine.getMousePos();
+        double angle = Math.toDegrees(Math.atan2(mousePos[0] - (x - camera[0]), mousePos[1] + (y - camera[1])));
+        double _angle = Math.toDegrees(Math.atan2((x - camera[0]) - mousePos[0], (y - camera[1]) + mousePos[1]));
+
+
+        attack[0] -= Math.sin(Math.toRadians(_angle)) * weaponTimer * 1.5;
+        attack[1] -= Math.cos(Math.toRadians(_angle)) * weaponTimer * 1.5;
+        if (weaponTimer > 0) {
+            weaponAttack.render(attack[0] - camera[0], attack[1] - camera[1], 128, 128, false, 
+            (float)angle - 140);
+            float[] playerMovement = new float[]{0.0f, 0.0f};
+
+            playerMovement[0] -= Math.sin(Math.toRadians(_angle)) * (weaponTimer / 1.1f);
+            playerMovement[1] -= Math.cos(Math.toRadians(_angle)) * (weaponTimer / 1.1f);
+
+            move(playerMovement, game.world);
+            playerWhiteImages.add(new float[]{x, y, 10});
+
+            weaponTimer--;
+        }
+        else {
+            weaponOffsetX = 0;
+            weaponOffsetY = 0;
+        }
         if (engine.getMouseClicks(GLFW_MOUSE_BUTTON_LEFT)) {
-            double mousePos[] = engine.getMousePos();
-            double angle = Math.toDegrees(Math.atan2(mousePos[0] - x, mousePos[1] + y));
+            if (weaponTimer <= 0) {
+                weaponOffsetX = 0;
+                weaponOffsetY = 0;
+                mousePos = engine.getMousePos();
+                angle = Math.toDegrees(Math.atan2((x - camera[0]) - mousePos[0], (y - camera[1]) + mousePos[1]));
+                weaponOffsetX -= Math.sin(Math.toRadians(angle)) * 60;
+                weaponOffsetY -= Math.cos(Math.toRadians(angle)) * 60;
+                
+
+                attack = new float[]{x + weaponOffsetX + 50, y + 20 + weaponOffsetY};
+                weaponTimer = 20;
+            }
         }
     }
 
     @Override
-    public void draw() {
-        if (engine.getMousePos()[0] > x - camera[0]) {
+    public void draw() {        
+        if (engine.getMousePos()[0] > 0) {
             flipped = false;
         }
         else {
             flipped = true;
         } 
+        for (float[] pos:playerWhiteImages) {
+            if (pos[2] < 0) {
+            }
+        }
+        for (float[] pos:playerWhiteImages) {
+            pos[2] -= 1;
+            whitePlayerImage.render(pos[0] - camera[0], pos[1] - camera[1], 128, 128);
+        }
 
         animationIndex = super.animate(currentAnimation, animationIndex, 8);
         currentAnimation[animationIndex / 8].render(x - camera[0], y - camera[1], 128, 128, flipped, 0);
 
         double mousePos[] = engine.getMousePos();
         double angle = Math.toDegrees(Math.atan2(mousePos[0] - (x - camera[0]), mousePos[1] + (y - camera[1])));
-        weaponImg.render(x+100 - camera[0], y+50 - camera[1], 128, 128, false, (float)angle - 110);
+        if (!flipped) {
+            weaponImg.render(x - camera[0] + weaponOffsetX + 50, y + 20 - camera[1] + weaponOffsetY, 128, 128, false, (float)angle - 140);
+        }
+        else {
+            weaponImg.render(x - camera[0] + weaponOffsetX + 80, y + 20 - camera[1] + weaponOffsetY, 128, 128, false, (float)angle - 140);
+        }
     }
 
     @Override
     public void update(Main game) {
-        handleMouseClicks();
+        handleMouseClicks(game);
         handleInput(game);
         handleAnimationState();
         draw();
