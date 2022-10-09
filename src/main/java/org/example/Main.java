@@ -6,6 +6,17 @@ import java.util.*;
 import org.json.simple.parser.*;
 import java.util.HashMap;
 
+import org.lwjgl.glfw.*;
+import org.lwjgl.glfw.GLFW;
+
+import org.lwjgl.glfw.*;
+import org.lwjgl.opengl.*;
+
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.system.MemoryUtil.*;
+
+
 public class Main {
     Engine engine = new Engine();
     public List<Object[]> world;
@@ -33,9 +44,24 @@ public class Main {
         blockLookup.put("right_corner.png", grass_right_corner);
         
 
-
-        while (engine.windowOpen()) {
-            engine.clear(65 / 255.0f, 85 / 255.0f, 27 / 255.0f);
+        double previousTime = glfwGetTime();
+        int frameCount = 0;
+        
+        while (engine.windowOpen()) 
+        {
+            // Measure speed
+            double currentTime = glfwGetTime();
+            frameCount++;
+            // If a second has passed.
+            if ( currentTime - previousTime >= 1.0 )
+            {
+                // Display the frame count here any way you want.
+                System.out.println(frameCount);
+        
+                frameCount = 0;
+                previousTime = currentTime;
+            }
+            engine.clear(146 / 255.0f, 179 / 255.0f, 117 / 255.0f);  
 
             for (Object[] pos:world) {
                 blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 16 * 4, 16 * 4);
