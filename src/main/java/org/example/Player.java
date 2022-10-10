@@ -31,6 +31,7 @@ public class Player extends Entity{
 
     Player(float playerX, float playerY, Engine _engine) throws IOException {
         super(playerX, playerY, 700);
+        System.out.println(y);
 
         this.engine = _engine;
         idleAnimations = new Texture[]{engine.loadTex("src/main/resources/assets/images/player/player_idle1.png"),
@@ -63,8 +64,7 @@ public class Player extends Entity{
         for (Object[] pos:world) {
             float[] tileRect = new float[]{(float)pos[0], (float)pos[1], 128, 128};
             float[] playerRect = new float[]{(float)x, (float)y, 128, 128};
-            
-            if (engine.collideRects(tileRect, playerRect)) {
+            if (engine.collideRects(tileRect, playerRect) && !(((String)pos[2]).equals("grass_2.png")) && !(((String)pos[2]).equals("tree.png"))) {
                 collidingTiles.add(pos);
             }
         }

@@ -21,7 +21,7 @@ class Editor:
             self.block_images.append(block[4])
             block.remove(block[4])
 
-        self.tiles = ["block.png", "grass.png", "left.png", "left_corner.png", "top.png", "right_corner.png", "right.png", "water.png"]
+        self.tiles = ["block.png", "grass.png", "left.png", "left_corner.png", "top.png", "right_corner.png", "right.png", "water.png", "water_dirt.png", "grass_2.png", "tree.png"]
 
         self.clicking = False
         self.select_image = None
@@ -31,8 +31,8 @@ class Editor:
 
         self.gui_manager = GuiManager([[]], [True])
         for i, tile_type in enumerate(self.tiles):
-            self.gui_manager.gui_elements[0].append(Button(i*80, 10, tile_type, select_image,
-                pygame.image.load(tile_type).get_width()*4, pygame.image.load(tile_type).get_height()*4, should_div=False))
+            self.gui_manager.gui_elements[0].append(Button(i*60, 10, tile_type, select_image,
+                pygame.image.load(tile_type).get_width()*2, pygame.image.load(tile_type).get_height()*2, should_div=False))
 
 
         self.events = None
