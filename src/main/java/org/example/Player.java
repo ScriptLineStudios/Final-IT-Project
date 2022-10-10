@@ -28,12 +28,16 @@ public class Player extends Entity{
     List<float[]> playerWhiteImages;
 
     float attack[];
+    Texture shadow;
+
+
 
     Player(float playerX, float playerY, Engine _engine) throws IOException {
-        super(playerX, playerY, 700);
+        super(playerX, playerY, 400);
         System.out.println(y);
 
         this.engine = _engine;
+        shadow = engine.loadTex("src/main/resources/assets/images/shadow.png");
         idleAnimations = new Texture[]{engine.loadTex("src/main/resources/assets/images/player/player_idle1.png"),
                                     engine.loadTex("src/main/resources/assets/images/player/player_idle2.png"),
                                     engine.loadTex("src/main/resources/assets/images/player/player_idle3.png"),
@@ -194,7 +198,9 @@ public class Player extends Entity{
         }
 
         animationIndex = super.animate(currentAnimation, animationIndex, 8);
+        shadow.render(x - camera[0], y - camera[1] - 55, 128, 128, flipped, 0, 1.0f);
         currentAnimation[animationIndex / 8].render(x - camera[0], y - camera[1], 128, 128, flipped, 0, 1.0f);
+
 
         double mousePos[] = engine.getMousePos();
         double angle = Math.toDegrees(Math.atan2(mousePos[0] - (x - camera[0]), mousePos[1] + (y - camera[1])));
