@@ -20,7 +20,7 @@ public class World {
            long y = (long)(((JSONArray)(data)).get(1));
            String name = (String)(((JSONArray)(data)).get(4));
            
-           returnData.add(new Object[]{((float)x * 4) - 400, -(((float)y * 4) - 400), (String)name});
+           returnData.add(new Object[]{((float)x * 8) - 400, -(((float)y * 8) - 400), (String)name});
         }
 
         return returnData;

@@ -61,7 +61,7 @@ public class Player extends Entity{
     private List<Object[]> getCollidingTiles(List<Object[]> world) {
         List<Object[]> collidingTiles = new ArrayList<Object[]>();
         for (Object[] pos:world) {
-            float[] tileRect = new float[]{(float)pos[0], (float)pos[1], 64, 64};
+            float[] tileRect = new float[]{(float)pos[0], (float)pos[1], 128, 128};
             float[] playerRect = new float[]{(float)x, (float)y, 128, 128};
             
             if (engine.collideRects(tileRect, playerRect)) {
@@ -79,7 +79,7 @@ public class Player extends Entity{
                 x = (float)pos[0] - 129;
             }
             else if (playerMovement[0] < 0) {
-                x = (float)pos[0] + 65;
+                x = (float)pos[0] + 129;
             }
         }
 
@@ -90,7 +90,7 @@ public class Player extends Entity{
                 y = (float)pos[1] - 128;
             }
             else if (playerMovement[1] < 0) {
-                y = (float)pos[1] + 65;
+                y = (float)pos[1] + 129;
             }
         }
     }
@@ -141,18 +141,19 @@ public class Player extends Entity{
         double _angle = Math.toDegrees(Math.atan2((x - camera[0]) - mousePos[0], (y - camera[1]) + mousePos[1]));
 
 
-        attack[0] -= Math.sin(Math.toRadians(_angle)) * weaponTimer * 1.5;
-        attack[1] -= Math.cos(Math.toRadians(_angle)) * weaponTimer * 1.5;
+        attack[0] -= Math.sin(Math.toRadians(_angle)) * weaponTimer * 1;
+        attack[1] -= Math.cos(Math.toRadians(_angle)) * weaponTimer * 1;
         if (weaponTimer > 0) {
-            weaponAttack.render(attack[0] - camera[0], attack[1] - camera[1], 128, 128, false, 
-            (float)angle - 140);
+            //weaponImg.render(attack[0] - camera[0], attack[1] - camera[1], 128, 128, false, 
+           // (float)angle - 140, weaponTimer / 10.0f);
             float[] playerMovement = new float[]{0.0f, 0.0f};
 
             playerMovement[0] -= Math.sin(Math.toRadians(_angle)) * (weaponTimer / 1.1f);
             playerMovement[1] -= Math.cos(Math.toRadians(_angle)) * (weaponTimer / 1.1f);
 
             move(playerMovement, game.world);
-            playerWhiteImages.add(new float[]{x, y, 10});
+
+            if (weaponTimer % 2 == 0) playerWhiteImages.add(new float[]{x, y, 1});
 
             weaponTimer--;
         }
@@ -169,7 +170,6 @@ public class Player extends Entity{
                 weaponOffsetX -= Math.sin(Math.toRadians(angle)) * 60;
                 weaponOffsetY -= Math.cos(Math.toRadians(angle)) * 60;
                 
-
                 attack = new float[]{x + weaponOffsetX + 50, y + 20 + weaponOffsetY};
                 weaponTimer = 20;
             }
@@ -189,20 +189,20 @@ public class Player extends Entity{
             }
         }
         for (float[] pos:playerWhiteImages) {
-            pos[2] -= 1;
-            whitePlayerImage.render(pos[0] - camera[0], pos[1] - camera[1], 128, 128);
+            pos[2] -= 0.1f;
+            whitePlayerImage.render(pos[0] - camera[0], pos[1] - camera[1], 128, 128, false, 0, pos[2]);
         }
 
         animationIndex = super.animate(currentAnimation, animationIndex, 8);
-        currentAnimation[animationIndex / 8].render(x - camera[0], y - camera[1], 128, 128, flipped, 0);
+        currentAnimation[animationIndex / 8].render(x - camera[0], y - camera[1], 128, 128, flipped, 0, 1.0f);
 
         double mousePos[] = engine.getMousePos();
         double angle = Math.toDegrees(Math.atan2(mousePos[0] - (x - camera[0]), mousePos[1] + (y - camera[1])));
         if (!flipped) {
-            weaponImg.render(x - camera[0] + weaponOffsetX + 50, y + 20 - camera[1] + weaponOffsetY, 128, 128, false, (float)angle - 140);
+            weaponImg.render(x - camera[0] + weaponOffsetX + 50, y + 20 - camera[1] + weaponOffsetY, 128, 128, false, (float)angle - 140, 1.0f);
         }
         else {
-            weaponImg.render(x - camera[0] + weaponOffsetX + 80, y + 20 - camera[1] + weaponOffsetY, 128, 128, false, (float)angle - 140);
+            weaponImg.render(x - camera[0] + weaponOffsetX + 80, y + 20 - camera[1] + weaponOffsetY, 128, 128, false, (float)angle - 140, 1.0f);
         }
     }
 
