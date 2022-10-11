@@ -119,10 +119,16 @@ public class Main {
 
                 leaf.render((float)particle[0] - player.camera[0], (float)particle[1] - player.camera[1], 32, 32, false, (float)Math.sin(globalTime)*90, particle[5]);
             }
+            System.out.println(enemyBullets.size());
+
+            for (Bullet bullet:enemyBullets) {
+                bullet.update(this);
+            }
             engine.particles.removeAll(leafParticles);
             slime._update(this);
             player.update(this);
             engine.update();
+            
         }
     }
 

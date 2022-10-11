@@ -11,18 +11,23 @@ public class Slime extends Entity {
     float[] moveDir;
 
     Random random = new Random();
+    int bulletCooldown;
 
     Texture slime;
+    Texture shadow;
     Slime(float x, float y, Engine _engine) throws IOException {
         super(x, y, 700);
         engine = _engine;
 
-        slime = new Texture("src/main/resources/assets/images/tree.png", 
+        slime = new Texture("src/main/resources/assets/images/slime.png", 
         "src/main/resources/defaultVertex.glsl",
         "src/main/resources/slimeFragment.glsl", engine);
+        shadow = engine.loadTex("src/main/resources/assets/images/shadow.png");
+
 
         changeMove = 0;
         moveDir = new float[]{random.ints(-10, 10).findFirst().getAsInt(), random.ints(-10, 10).findFirst().getAsInt()};
+        bulletCooldown = 0;
     }
     
     private List<Object[]> getCollidingTiles(List<Object[]> world, Main game) {
@@ -96,7 +101,17 @@ public class Slime extends Entity {
         movement[0] += moveDir[0];
         movement[1] += moveDir[1];
 
-        game.enemyBullets.add(new Bullet(x, y, 10.0f, 10.0f, game.engine));
+        if (bulletCooldown <= 0) {
+            game.enemyBullets.add(new Bullet(x, y, 5.0f, 5.0f, game.engine));
+            game.enemyBullets.add(new Bullet(x, y, -5.0f, 5.0f, game.engine));
+            game.enemyBullets.add(new Bullet(x, y, -5.0f, 0.0f, game.engine));
+            game.enemyBullets.add(new Bullet(x, y, 5.0f, 0.0f, game.engine));
+
+            bulletCooldown = 90;
+        }
+        else {
+            bulletCooldown -= 1;
+        }
 
         //System.out.printf("X: %f Y: %f \n", moveDir[0], moveDir[1]);
 
@@ -105,7 +120,8 @@ public class Slime extends Entity {
     
     @Override
     public void draw(Main game) {
-        slime.render(x - game.player.camera[0], y - game.player.camera[1], 128, 128, false, (float)Math.sin(game.globalTime*2) * 15, 1.0f);
+        shadow.render(x - game.player.camera[0], y - game.player.camera[1] - 50, 128, 128, false, (float)Math.sin(game.globalTime*2) * 5, 1.0f);
+        slime.render(x - game.player.camera[0], y - game.player.camera[1] + (float)Math.abs(Math.sin(game.globalTime*4) * 100), 128, 128, false, 0, 1.0f);
     }
 
     public void _update(Main game) throws IOException {
