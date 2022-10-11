@@ -20,6 +20,8 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Main {
     Engine engine = new Engine();
     public List<Object[]> world;
+    public List<Bullet> enemyBullets;
+
 
     public Player player;
 
@@ -31,6 +33,8 @@ public class Main {
         player = new Player(200.0f, -2000.0f, engine);
 
         Random random = new Random();
+
+        enemyBullets = new ArrayList<Bullet>();
 
         Texture block = engine.loadTex("src/main/resources/assets/images/block.png");
         Texture grass = engine.loadTex("src/main/resources/assets/images/grass.png");
@@ -101,16 +105,6 @@ public class Main {
                 }
             }
 
-            /*
-            List<Book> found = new ArrayList<Book>();
-            for(Book book : books){
-                if(book.getIsbn().equals(isbn)){
-                    found.add(book);
-                }
-            }
-            books.removeAll(found);
-            */
-
             List<float[]> leafParticles = new ArrayList<float[]>();
             
             for (float[] particle:engine.particles) {
@@ -123,13 +117,10 @@ public class Main {
                     leafParticles.add(particle);
                 }
 
-
-                //System.out.println((float)Math.sin(globalTime)*90);
                 leaf.render((float)particle[0] - player.camera[0], (float)particle[1] - player.camera[1], 32, 32, false, (float)Math.sin(globalTime)*90, particle[5]);
             }
             engine.particles.removeAll(leafParticles);
-            //System.out.println("SIZE: " + engine.particles.size());
-            slime.update(this);
+            slime._update(this);
             player.update(this);
             engine.update();
         }

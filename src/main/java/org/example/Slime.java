@@ -62,7 +62,7 @@ public class Slime extends Entity {
         }
     }
 
-    private void moveObject(Main game) {
+    private void moveObject(Main game) throws IOException {
         float[] movement = new float[]{0.0f, 0.0f};
 
         if (changeMove <= 0) {
@@ -83,6 +83,11 @@ public class Slime extends Entity {
             movement[1] -= Math.cos(Math.toRadians(_angle)) * (game.player.weaponTimer / 1.1f) * 2;
             slime.shader.uploadFloat("c", 0.0f);
             slime.shader.uploadFloat("Pixels", random.ints(64, 256).findFirst().getAsInt());
+            
+            for (int i = 0; i < 40; i++) {
+                engine.particles.add(new float[]{x + random.ints(10, 64).findFirst().getAsInt(), y + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1});
+            }
+        
         }
         if (game.player.weaponTimer <= 0) {
             slime.shader.uploadFloat("c", 1.0f);
@@ -90,6 +95,8 @@ public class Slime extends Entity {
         }
         movement[0] += moveDir[0];
         movement[1] += moveDir[1];
+
+        game.enemyBullets.add(new Bullet(x, y, 10.0f, 10.0f, game.engine));
 
         //System.out.printf("X: %f Y: %f \n", moveDir[0], moveDir[1]);
 
@@ -101,8 +108,7 @@ public class Slime extends Entity {
         slime.render(x - game.player.camera[0], y - game.player.camera[1], 128, 128, false, (float)Math.sin(game.globalTime*2) * 15, 1.0f);
     }
 
-    @Override
-    public void update(Main game) {
+    public void _update(Main game) throws IOException {
         moveObject(game);
         draw(game);
     }

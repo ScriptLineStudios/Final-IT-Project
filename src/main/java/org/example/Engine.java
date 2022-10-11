@@ -26,7 +26,6 @@ public class Engine {
     double lastFrame;
     double deltaTime;
 
-
     List<float[]> particles = new ArrayList<float[]>();
 
     public void init() {
