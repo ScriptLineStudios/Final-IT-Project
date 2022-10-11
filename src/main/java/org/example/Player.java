@@ -181,7 +181,7 @@ public class Player extends Entity{
     }
 
     @Override
-    public void draw() {        
+    public void draw(Main game) {        
         if (engine.getMousePos()[0] > 0) {
             flipped = false;
         }
@@ -217,7 +217,7 @@ public class Player extends Entity{
         handleMouseClicks(game);
         handleInput(game);
         handleAnimationState();
-        draw();
+        draw(game);
     }
 
 }

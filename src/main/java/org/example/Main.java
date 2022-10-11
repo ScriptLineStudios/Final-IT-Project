@@ -21,12 +21,14 @@ public class Main {
     Engine engine = new Engine();
     public List<Object[]> world;
 
+    public Player player;
+
     float globalTime;
     private void run() throws ParseException, IOException, FileNotFoundException {
         engine.init();
         world = World.generateArea();
         globalTime = 0;
-        Player player = new Player(200.0f, -2000.0f, engine);
+        player = new Player(200.0f, -2000.0f, engine);
 
         Random random = new Random();
 
@@ -66,7 +68,7 @@ public class Main {
         blockLookup.put("tree.png", tree);
 
 
-
+        Slime slime = new Slime(200.0f, -2000.0f, engine);
 
         double previousTime = glfwGetTime();
         int frameCount = 0;
@@ -81,7 +83,7 @@ public class Main {
             if ( currentTime - previousTime >= 1.0 )
             {
                 // Display the frame count here any way you want.
-                System.out.printf("FPS: %d\n", frameCount);
+                // System.out.printf("FPS: %d\n", frameCount);
                 frameCount = 0;
                 previousTime = currentTime;
             }
@@ -127,7 +129,7 @@ public class Main {
             }
             engine.particles.removeAll(leafParticles);
             //System.out.println("SIZE: " + engine.particles.size());
-            
+            slime.update(this);
             player.update(this);
             engine.update();
         }
