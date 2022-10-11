@@ -123,13 +123,22 @@ public class Main {
 
                 particleImgs[(int)particle[6]].render((float)particle[0] - player.camera[0], (float)particle[1] - player.camera[1], 32, 32, false, (float)Math.sin(globalTime)*90, particle[5]);
             }
-            System.out.println(enemyBullets.size());
+            //System.out.println(enemyBullets.size());
+
+            List<Bullet> badBullets = new ArrayList<Bullet>();
 
             for (Bullet bullet:enemyBullets) {
+                if (bullet.lifetime <= 0) {
+                    badBullets.add(bullet);
+                }
+
                 bullet.bullet.shader.uploadFloat("time", globalTime);
+
                 bullet.update(this);
             }
             engine.particles.removeAll(leafParticles);
+            enemyBullets.removeAll(badBullets);
+
             slime._update(this);
             slime2._update(this);
 

@@ -2,7 +2,9 @@
 
 in vec2 texCoord;
 uniform sampler2D tex0;   
-uniform float time;
+uniform float time = 1;
+uniform float bounce = 1;
+
 
 out vec4 color;
 
@@ -15,5 +17,5 @@ void main()
     float dy = 10.0 * (1.0 / Pixels);
     vec2 Coord = vec2(dx * floor(texCoord.x / dx),
                         dy * floor(texCoord.y / dy));
-    color = texture(tex0,Coord) * vec4(1, c, c, 1);
+    color = texture(tex0,vec2(Coord.x, Coord.y / bounce)) * vec4(1, c, c, 1);
 }

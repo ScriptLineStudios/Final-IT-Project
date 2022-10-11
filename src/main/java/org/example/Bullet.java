@@ -6,12 +6,13 @@ public class Bullet extends Entity {
     float xVel, yVel;
     Texture bullet;
     Engine engine;
-    Bullet(float x, float y, float _xVel, float _yVel, Engine _engine) throws IOException {
+    float lifetime;
+    Bullet(float x, float y, float _xVel, float _yVel, float _lifetime, Engine _engine) throws IOException {
         super(x, y, 100);
         xVel = _xVel;
         yVel = _yVel;
         engine = _engine;
-
+        lifetime = _lifetime;
 
         bullet = new Texture("src/main/resources/assets/images/bullet.png", 
         "src/main/resources/defaultVertex.glsl",
@@ -25,6 +26,7 @@ public class Bullet extends Entity {
 
     @Override
     public void update(Main game) {
+        lifetime -= game.engine.getDeltaTime();
         x += xVel;
         y += yVel;
 

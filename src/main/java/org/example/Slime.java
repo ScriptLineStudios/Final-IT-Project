@@ -72,7 +72,7 @@ public class Slime extends Entity {
 
         if (changeMove <= 0) {
             moveDir = new float[]{random.ints(-5, 5).findFirst().getAsInt(), random.ints(-5, 5).findFirst().getAsInt()};
-            changeMove = 50;
+            changeMove = random.ints(50, 70).findFirst().getAsInt();
         }
         else {
             changeMove -= 1;
@@ -100,15 +100,18 @@ public class Slime extends Entity {
         if (game.player.weaponTimer <= 0) {
             slime.shader.uploadFloat("c", 1.0f);
             slime.shader.uploadFloat("Pixels", 512.0f);
+
         }
+        slime.shader.uploadFloat("time", game.globalTime);
+
         movement[0] += moveDir[0];
         movement[1] += moveDir[1];
 
         if (bulletCooldown <= 0) {
-            game.enemyBullets.add(new Bullet(x, y, 5.0f, 5.0f, game.engine));
-            game.enemyBullets.add(new Bullet(x, y, -5.0f, 5.0f, game.engine));
-            game.enemyBullets.add(new Bullet(x, y, -5.0f, 0.0f, game.engine));
-            game.enemyBullets.add(new Bullet(x, y, 5.0f, 0.0f, game.engine));
+            game.enemyBullets.add(new Bullet(x, y, 5.0f, 5.0f, 5, game.engine));
+            game.enemyBullets.add(new Bullet(x, y, -5.0f, 5.0f, 5, game.engine));
+            game.enemyBullets.add(new Bullet(x, y, -5.0f, 0.0f, 5, game.engine));
+            game.enemyBullets.add(new Bullet(x, y, 5.0f, 0.0f, 5, game.engine));
 
             bulletCooldown = 90;
         }
@@ -125,6 +128,13 @@ public class Slime extends Entity {
     public void draw(Main game) {
         shadow.render(x - game.player.camera[0], y - game.player.camera[1] - 50, 128, 128, false, (float)Math.sin(game.globalTime*2) * 5, 1.0f);
         slime.render(x - game.player.camera[0], y - game.player.camera[1] + (float)Math.abs(Math.sin(game.globalTime*4) * 100), 128, 128, false, 0, 1.0f);
+        if (Math.abs((float)Math.sin(game.globalTime*2) * 5) <= 0.4) {
+            slime.shader.uploadFloat("bounce", 0.8f);
+        }
+        else {
+            slime.shader.uploadFloat("bounce", 1.0f);
+        }
+        
     }
 
     public void _update(Main game) throws IOException {
