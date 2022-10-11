@@ -89,9 +89,12 @@ public class Slime extends Entity {
             slime.shader.uploadFloat("c", 0.0f);
             slime.shader.uploadFloat("Pixels", random.ints(64, 256).findFirst().getAsInt());
             
-            for (int i = 0; i < 40; i++) {
+            /*for (int i = 0; i < 40; i++) {
                 engine.particles.add(new float[]{x + random.ints(10, 64).findFirst().getAsInt(), y + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1});
-            }
+            }*/
+            engine.particles.add(new float[]{x + random.ints(10, 64).findFirst().getAsInt(), y + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1, 1});
+            
+
         
         }
         if (game.player.weaponTimer <= 0) {

@@ -22,6 +22,7 @@ public class Main {
     public List<Object[]> world;
     public List<Bullet> enemyBullets;
 
+    Texture[] particleImgs;
 
     public Player player;
 
@@ -45,18 +46,19 @@ public class Main {
         Texture grass_right = engine.loadTex("src/main/resources/assets/images/right.png");
         Texture water_dirt = engine.loadTex("src/main/resources/assets/images/water_dirt.png");
         Texture grass_2 = engine.loadTex("src/main/resources/assets/images/grass_2.png");
+
         Texture leaf = engine.loadTex("src/main/resources/assets/images/leaf.png");
+        Texture circle = engine.loadTex("src/main/resources/assets/images/circle.png");
+
+        particleImgs = new Texture[]{leaf, circle};
 
         Texture tree = new Texture("src/main/resources/assets/images/tree.png", 
         "src/main/resources/defaultVertex.glsl",
         "src/main/resources/treeFragment.glsl", engine);
 
-
-       
         Texture water = new Texture("src/main/resources/assets/images/water.png", 
             "src/main/resources/defaultVertex.glsl",
             "src/main/resources/waterFragment.glsl", engine);
-
         
         HashMap<String, Texture> blockLookup = new HashMap<String, Texture>();
         blockLookup.put("block.png", block);
@@ -73,6 +75,8 @@ public class Main {
 
 
         Slime slime = new Slime(200.0f, -2000.0f, engine);
+        Slime slime2 = new Slime(700.0f, -2000.0f, engine);
+
 
         double previousTime = glfwGetTime();
         int frameCount = 0;
@@ -99,7 +103,7 @@ public class Main {
                     blockLookup.get((String)pos[2]).shader.uploadFloat("time", globalTime);
                     if (((String)pos[2]).equals("tree.png")) {
                         if (random.ints(0, 40).findFirst().getAsInt() == 1) {
-                            engine.particles.add(new float[]{(float)pos[0] + random.ints(10, 64).findFirst().getAsInt(), (float)pos[1] + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1});
+                            engine.particles.add(new float[]{(float)pos[0] + random.ints(10, 64).findFirst().getAsInt(), (float)pos[1] + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1, 0});
                         }
                     }
                 }
@@ -117,15 +121,18 @@ public class Main {
                     leafParticles.add(particle);
                 }
 
-                leaf.render((float)particle[0] - player.camera[0], (float)particle[1] - player.camera[1], 32, 32, false, (float)Math.sin(globalTime)*90, particle[5]);
+                particleImgs[(int)particle[6]].render((float)particle[0] - player.camera[0], (float)particle[1] - player.camera[1], 32, 32, false, (float)Math.sin(globalTime)*90, particle[5]);
             }
             System.out.println(enemyBullets.size());
 
             for (Bullet bullet:enemyBullets) {
+                bullet.bullet.shader.uploadFloat("time", globalTime);
                 bullet.update(this);
             }
             engine.particles.removeAll(leafParticles);
             slime._update(this);
+            slime2._update(this);
+
             player.update(this);
             engine.update();
             

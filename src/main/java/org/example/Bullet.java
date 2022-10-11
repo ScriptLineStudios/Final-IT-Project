@@ -12,7 +12,10 @@ public class Bullet extends Entity {
         yVel = _yVel;
         engine = _engine;
 
-        bullet = engine.loadTex("src/main/resources/assets/images/bullet.png");
+
+        bullet = new Texture("src/main/resources/assets/images/bullet.png", 
+        "src/main/resources/defaultVertex.glsl",
+        "src/main/resources/enemyBulletFragment.glsl", engine);
     }
 
     @Override
