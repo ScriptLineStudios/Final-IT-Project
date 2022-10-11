@@ -82,9 +82,11 @@ public class Slime extends Entity {
             movement[0] -= Math.sin(Math.toRadians(_angle)) * (game.player.weaponTimer / 1.1f) * 2;
             movement[1] -= Math.cos(Math.toRadians(_angle)) * (game.player.weaponTimer / 1.1f) * 2;
             slime.shader.uploadFloat("c", 0.0f);
+            slime.shader.uploadFloat("Pixels", random.ints(64, 256).findFirst().getAsInt());
         }
         if (game.player.weaponTimer <= 0) {
             slime.shader.uploadFloat("c", 1.0f);
+            slime.shader.uploadFloat("Pixels", 512.0f);
         }
         movement[0] += moveDir[0];
         movement[1] += moveDir[1];
