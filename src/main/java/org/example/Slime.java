@@ -104,15 +104,15 @@ public class Slime extends Entity {
         }
         slime.shader.uploadFloat("time", game.globalTime);
 
-        movement[0] += moveDir[0];
-        movement[1] += moveDir[1];
+        movement[0] += moveDir[0] / 4;
+        movement[1] += moveDir[1] / 4;
 
         if (bulletCooldown <= 0) {
-            game.enemyBullets.add(new Bullet(x, y, 5.0f, 5.0f, 5, game.engine));
+            /*game.enemyBullets.add(new Bullet(x, y, 5.0f, 5.0f, 5, game.engine));
             game.enemyBullets.add(new Bullet(x, y, -5.0f, 5.0f, 5, game.engine));
             game.enemyBullets.add(new Bullet(x, y, -5.0f, 0.0f, 5, game.engine));
             game.enemyBullets.add(new Bullet(x, y, 5.0f, 0.0f, 5, game.engine));
-
+            */
             bulletCooldown = 90;
         }
         else {
