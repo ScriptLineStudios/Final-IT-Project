@@ -32,6 +32,7 @@ public class Slime extends Entity {
             float[] playerRect = new float[]{(float)x, (float)y, 128, 128};
             if (engine.collideRects(tileRect, playerRect) && !(((String)pos[2]).equals("grass_2.png")) && !(((String)pos[2]).equals("tree.png"))) {
                 collidingTiles.add(pos);
+                changeMove = -1;
             }
         }
         return collidingTiles;
