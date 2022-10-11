@@ -45,7 +45,7 @@ public class Main {
 
         Texture tree = new Texture("src/main/resources/assets/images/tree.png", 
         "src/main/resources/defaultVertex.glsl",
-        "src/main/resources/treeFragment.glsl", engine);;
+        "src/main/resources/treeFragment.glsl", engine);
 
 
        

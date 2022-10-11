@@ -17,7 +17,9 @@ public class Slime extends Entity {
         super(x, y, 700);
         engine = _engine;
 
-        slime = engine.loadTex("src/main/resources/assets/images/tree.png");
+        slime = new Texture("src/main/resources/assets/images/tree.png", 
+        "src/main/resources/defaultVertex.glsl",
+        "src/main/resources/slimeFragment.glsl", engine);
 
         changeMove = 0;
         moveDir = new float[]{random.ints(-10, 10).findFirst().getAsInt(), random.ints(-10, 10).findFirst().getAsInt()};
@@ -75,12 +77,14 @@ public class Slime extends Entity {
             changeMove = -1;
             double mousePos[] = engine.getMousePos();
             double _angle = Math.toDegrees(Math.atan2((game.player.x - game.player.camera[0]) - mousePos[0], (game.player.y - game.player.camera[1]) + mousePos[1]));
-
+            
             movement[0] -= Math.sin(Math.toRadians(_angle)) * (game.player.weaponTimer / 1.1f) * 2;
             movement[1] -= Math.cos(Math.toRadians(_angle)) * (game.player.weaponTimer / 1.1f) * 2;
-
+            slime.shader.uploadFloat("c", 0.0f);
         }
-
+        if (game.player.weaponTimer <= 0) {
+            slime.shader.uploadFloat("c", 1.0f);
+        }
         movement[0] += moveDir[0];
         movement[1] += moveDir[1];
 

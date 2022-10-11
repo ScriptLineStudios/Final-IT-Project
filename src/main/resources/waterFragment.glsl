@@ -9,11 +9,11 @@ out vec4 color;
 vec2 SineWave( vec2 p )
 {
     // convert Vertex position <-1,+1> to texture coordinate <0,1> and some shrinking so the effect dont overlap screen
-    p.x=( 0.9*p.x);
-    p.y=(-0.9*p.y);
+    p.x=( 1*p.x);
+    p.y=(-1*p.y);
     // wave distortion
-    float x = sin( 25.0*p.y + 30.0*p.x + 6.28*time) * 0.02;
-    float y = sin( 25.0*p.y + 30.0*p.x + 6.28*time) * 0.02;
+    float x = sin( 25.0*p.y + 10.0*p.x + 6.28*time) * 0.01;
+    float y = sin( 25.0*p.y + 10.0*p.x + 6.28*time) * 0.01;
     return vec2(p.x+x, p.y+y);
 }
 
