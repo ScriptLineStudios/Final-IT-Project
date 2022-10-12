@@ -87,8 +87,6 @@ public class Main {
 
         world.removeAll(enemys);
 
-        System.out.println(slimes.size());
-        
         while (engine.windowOpen()) 
         {
             globalTime += engine.getDeltaTime();

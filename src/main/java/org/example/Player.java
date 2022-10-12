@@ -106,25 +106,25 @@ public class Player extends Entity{
 
     @Override
     public void handleInput(Main game) {
-        //double dt = engine.getDeltaTime();
+        double dt = engine.getDeltaTime();
         moving = false;
         float[] playerMovement = new float[]{0.0f, 0.0f};
 
         if (engine.getKey(GLFW_KEY_D)) {
-            playerMovement[0] += moveSpeed  * 1 / 60.0f;
+            playerMovement[0] += moveSpeed  * dt;
             moving = true;
         }
         if (engine.getKey(GLFW_KEY_A)) {
-            playerMovement[0] -= moveSpeed *  1 / 60.0f;
+            playerMovement[0] -= moveSpeed * dt;
             moving = true;
         }
 
         if (engine.getKey(GLFW_KEY_W)) {
-            playerMovement[1] += moveSpeed *  1 / 60.0f;
+            playerMovement[1] += moveSpeed * dt;
             moving = true;
         }
         if (engine.getKey(GLFW_KEY_S)) {
-            playerMovement[1] -= moveSpeed * 1 / 60.0f;
+            playerMovement[1] -= moveSpeed * dt;
             moving = true;
         }
 

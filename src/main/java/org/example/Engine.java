@@ -42,7 +42,7 @@ public class Engine {
         window = glfwCreateWindow(800, 800, "Game", NULL, NULL);
 
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (action == GLFW_PRESS)
+            if (action == GLFW_PRESS) 
             {
                 keys[key] = 1;
             }
@@ -56,7 +56,7 @@ public class Engine {
         });
 
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(1);
+        glfwSwapInterval(0);
         glfwShowWindow(window);
         GL.createCapabilities();
         lastFrame = glfwGetTime();
