@@ -98,7 +98,7 @@ public class Main {
             if ( currentTime - previousTime >= 1.0 )
             {
                 // Display the frame count here any way you want.
-                //System.out.printf("FPS: %d\n", frameCount);
+                // System.out.printf("FPS: %d\n", frameCount);
                 frameCount = 0;
                 previousTime = currentTime;
             }
@@ -107,11 +107,13 @@ public class Main {
             for (Object[] pos:world) {
                 if (Math.abs((float)pos[0] - player.x) < 1300) {
                     blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 128, 128);
-                    blockLookup.get((String)pos[2]).shader.uploadFloat("_time", globalTime);
+                    blockLookup.get((String)pos[2]).shader.uploadFloat("time", globalTime);
                     if (((String)pos[2]).equals("tree.png")) {
                         if (random.ints(0, 40).findFirst().getAsInt() == 1) {
                             engine.particles.add(new float[]{(float)pos[0] + random.ints(10, 64).findFirst().getAsInt(), (float)pos[1] + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1, 0});
                         }
+                    
+                    
                     }
                 }
             }
