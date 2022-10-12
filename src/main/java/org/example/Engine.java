@@ -26,6 +26,8 @@ public class Engine {
     double deltaTime;
 
     List<float[]> particles = new ArrayList<float[]>();
+    List<float[]> attackParticles = new ArrayList<float[]>();
+
 
     public void init() {
         GLFWErrorCallback.createPrint(System.err).set();

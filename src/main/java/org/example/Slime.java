@@ -14,12 +14,18 @@ public class Slime extends Entity {
     int bulletCooldown;
     float health;
     Texture slime;
+    Texture slime_attack;
+    Texture img;
+
     Texture shadow;
     Slime(float x, float y, Engine _engine) throws IOException {
         super(x, y, 700);
         engine = _engine;
 
         slime = new Texture("src/main/resources/assets/images/slime.png", 
+        "src/main/resources/defaultVertex.glsl",
+        "src/main/resources/slimeFragment.glsl", engine);
+        slime_attack = new Texture("src/main/resources/assets/images/slime_attack.png", 
         "src/main/resources/defaultVertex.glsl",
         "src/main/resources/slimeFragment.glsl", engine);
         shadow = engine.loadTex("src/main/resources/assets/images/shadow.png");
@@ -30,6 +36,8 @@ public class Slime extends Entity {
         bulletCooldown = 0;
 
         health = 40.0f;
+
+        img = slime;
     }
     
     private List<Object[]> getCollidingTiles(List<Object[]> world, Main game) {
@@ -81,7 +89,7 @@ public class Slime extends Entity {
         }
         float[] playerRect = new float[]{(float)x, (float)y, 128, 128};
 
-        if (game.player.weaponTimer > 0 && engine.collideRects(playerRect, new float[]{game.player.x, game.player.y, 128, 128})) {
+        if (game.player.weaponTimer > 0 && engine.collideRects(playerRect, new float[]{game.player.x, game.player.y, 256, 256})) {
             changeMove = -1;
             double mousePos[] = engine.getMousePos();
             double _angle = Math.toDegrees(Math.atan2((game.player.x - game.player.camera[0]) - mousePos[0], (game.player.y - game.player.camera[1]) + mousePos[1]));
@@ -94,7 +102,9 @@ public class Slime extends Entity {
             /*for (int i = 0; i < 40; i++) {
                 engine.particles.add(new float[]{x + random.ints(10, 64).findFirst().getAsInt(), y + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1});
             }*/
-            engine.particles.add(new float[]{x + random.ints(10, 64).findFirst().getAsInt(), y + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1, 1});
+            if (random.ints(0, 5).findFirst().getAsInt() == 1) {
+                engine.attackParticles.add(new float[]{x + random.ints(10, 64).findFirst().getAsInt(), y + random.ints(10, 64).findFirst().getAsInt(), random.ints(-10, 10).findFirst().getAsInt(), random.ints(-10, 10).findFirst().getAsInt(), 1.0f});
+            }
             health -= 0.5f;
 
         
@@ -114,11 +124,19 @@ public class Slime extends Entity {
             game.enemyBullets.add(new Bullet(x, y, -5.0f, 5.0f, 5, game.engine));
             game.enemyBullets.add(new Bullet(x, y, -5.0f, 0.0f, 5, game.engine));
             game.enemyBullets.add(new Bullet(x, y, 5.0f, 0.0f, 5, game.engine));
-            bulletCooldown = random.ints(70, 120).findFirst().getAsInt();
+            bulletCooldown = random.ints(120, 200).findFirst().getAsInt();
         }
         else {
             bulletCooldown -= 1;
         }
+
+        if (bulletCooldown <= 18) {
+            img = slime_attack;
+        }
+        else {
+            img = slime;
+        }
+
 
         //System.out.printf("X: %f Y: %f \n", moveDir[0], moveDir[1]);
 
@@ -127,14 +145,15 @@ public class Slime extends Entity {
     
     @Override
     public void draw(Main game) {
+
         if (health > 0) {
             shadow.render(x - game.player.camera[0], y - game.player.camera[1] - 50, 128, 128, false, (float)Math.sin(game.globalTime*2) * 5, 1.0f);
-            slime.render(x - game.player.camera[0], y - game.player.camera[1] + (float)Math.abs(Math.sin(game.globalTime*4) * 100), 128, 128, false, 0, 1.0f);
+            img.render(x - game.player.camera[0], y - game.player.camera[1] + (float)Math.abs(Math.sin(game.globalTime*4) * 100), 128, 128, false, 0, 1.0f);
             if (Math.abs((float)Math.sin(game.globalTime*2) * 5) <= 0.4) {
-                slime.shader.uploadFloat("bounce", 0.8f);
+                img.shader.uploadFloat("bounce", 0.8f);
             }
             else {
-                slime.shader.uploadFloat("bounce", 1.0f);
+                img.shader.uploadFloat("bounce", 1.0f);
             }
         }
         else {

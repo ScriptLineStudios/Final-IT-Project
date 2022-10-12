@@ -30,11 +30,15 @@ public class Player extends Entity{
     float attack[];
     Texture shadow;
 
+    double[] capMouse;
 
 
+    boolean canAttack;
     Player(float playerX, float playerY, Engine _engine) throws IOException {
         super(playerX, playerY, 500);
         System.out.println(y);
+
+        canAttack = true;
 
         this.engine = _engine;
         shadow = engine.loadTex("src/main/resources/assets/images/shadow.png");
@@ -60,7 +64,8 @@ public class Player extends Entity{
         weaponOffsetX = 0;
         weaponOffsetY = 0;
         attack = new float[]{0, 0};
-        playerWhiteImages = new ArrayList<float[]>();;
+        playerWhiteImages = new ArrayList<float[]>();
+        capMouse = new double[]{0.0, 0.0};
     }
 
     private List<Object[]> getCollidingTiles(List<Object[]> world) {
@@ -145,15 +150,15 @@ public class Player extends Entity{
         double _angle = Math.toDegrees(Math.atan2((x - camera[0]) - mousePos[0], (y - camera[1]) + mousePos[1]));
 
 
-        attack[0] -= Math.sin(Math.toRadians(_angle)) * weaponTimer * 1;
-        attack[1] -= Math.cos(Math.toRadians(_angle)) * weaponTimer * 1;
+        attack[0] -= Math.sin(Math.toRadians(_angle)) * weaponTimer * 0.7;
+        attack[1] -= Math.cos(Math.toRadians(_angle)) * weaponTimer * 0.7;
         if (weaponTimer > 0) {
-            //weaponImg.render(attack[0] - camera[0], attack[1] - camera[1], 128, 128, false, 
-           // (float)angle - 140, weaponTimer / 10.0f);
+            weaponAttack.render(attack[0] - camera[0], attack[1] - camera[1], 200, 200, false, 
+            (float)angle - 140, weaponTimer / 11.0f);
             float[] playerMovement = new float[]{0.0f, 0.0f};
 
-            playerMovement[0] -= Math.sin(Math.toRadians(_angle)) * (weaponTimer / 1.1f);
-            playerMovement[1] -= Math.cos(Math.toRadians(_angle)) * (weaponTimer / 1.1f);
+            playerMovement[0] -= Math.sin(Math.toRadians(_angle)) * (weaponTimer / 1.5f);
+            playerMovement[1] -= Math.cos(Math.toRadians(_angle)) * (weaponTimer / 1.5f);
 
             move(playerMovement, game.world);
 
@@ -165,19 +170,21 @@ public class Player extends Entity{
             weaponOffsetX = 0;
             weaponOffsetY = 0;
         }
-        if (engine.getMouseClicks(GLFW_MOUSE_BUTTON_LEFT)) {
-            if (weaponTimer <= 0) {
+        if (glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+            if (weaponTimer <= 0 && canAttack) {
                 weaponOffsetX = 0;
                 weaponOffsetY = 0;
                 mousePos = engine.getMousePos();
                 angle = Math.toDegrees(Math.atan2((x - camera[0]) - mousePos[0], (y - camera[1]) + mousePos[1]));
                 weaponOffsetX -= Math.sin(Math.toRadians(angle)) * 60;
                 weaponOffsetY -= Math.cos(Math.toRadians(angle)) * 60;
-                
+                canAttack = false;
                 attack = new float[]{x + weaponOffsetX + 50, y + 20 + weaponOffsetY};
                 weaponTimer = 20;
+                capMouse = engine.getMousePos();
             }
         }
+        if (glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) canAttack = true;
     }
 
     @Override

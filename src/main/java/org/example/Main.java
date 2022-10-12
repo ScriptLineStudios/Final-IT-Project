@@ -41,7 +41,8 @@ public class Main {
         Texture _slime = engine.loadTex("src/main/resources/assets/images/slime.png");
 
         Texture leaf = engine.loadTex("src/main/resources/assets/images/leaf.png");
-        Texture circle = engine.loadTex("src/main/resources/assets/images/circle.png");
+        Texture circle = engine.loadTex("src/main/resources/assets/images/part.png");
+
 
         particleImgs = new Texture[]{leaf, circle};
 
@@ -106,19 +107,21 @@ public class Main {
 
             for (Object[] pos:world) {
                 if (Math.abs((float)pos[0] - player.x) < 1300) {
-                    blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 128, 128);
-                    blockLookup.get((String)pos[2]).shader.uploadFloat("time", globalTime);
                     if (((String)pos[2]).equals("tree.png")) {
+                        blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 128, 256);
                         if (random.ints(0, 40).findFirst().getAsInt() == 1) {
                             engine.particles.add(new float[]{(float)pos[0] + random.ints(10, 64).findFirst().getAsInt(), (float)pos[1] + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1, 0});
-                        }
-                    
-                    
+                        }                    
+                    }
+                    else {
+                        blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 128, 128);
+                        blockLookup.get((String)pos[2]).shader.uploadFloat("time", globalTime);                        
                     }
                 }
             }
 
             List<float[]> leafParticles = new ArrayList<float[]>();
+
             
             for (float[] particle:engine.particles) {
                 particle[1] -= 1;
@@ -130,7 +133,16 @@ public class Main {
                     leafParticles.add(particle);
                 }
 
-                particleImgs[(int)particle[6]].render((float)particle[0] - player.camera[0], (float)particle[1] - player.camera[1], 32, 32, false, (float)Math.sin(globalTime)*90, particle[5]);
+                leaf.render((float)particle[0] - player.camera[0], (float)particle[1] - player.camera[1], 32, 32, false, (float)Math.sin(globalTime)*90, particle[5]);
+            }
+
+            for (float[] _particle:engine.attackParticles) {
+                _particle[0] -= _particle[2] * _particle[4] / 4;
+                _particle[1] -= _particle[3] * _particle[4] / 4;
+
+                _particle[4] -= 0.006f;
+
+                circle.render((float)_particle[0] - player.camera[0], (float)_particle[1] - player.camera[1], 50, 50, false, _particle[4]*360, _particle[4]);
             }
             //System.out.println(enemyBullets.size());
 
@@ -141,7 +153,7 @@ public class Main {
                     badBullets.add(bullet);
                 }
 
-                bullet.bullet.shader.uploadFloat("time", globalTime);
+                bullet.bullets[bullet.animationIndex / 15].shader.uploadFloat("time", globalTime);
 
                 bullet.update(this);
             }
