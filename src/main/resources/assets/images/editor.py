@@ -21,7 +21,7 @@ class Editor:
             self.block_images.append(block[4])
             block.remove(block[4])
 
-        self.tiles = ["block.png", "grass.png", "left.png", "left_corner.png", "top.png", "right_corner.png", "right.png", "water.png", "water_dirt.png", "grass_2.png", "tree.png"]
+        self.tiles = ["block.png", "grass.png", "left.png", "left_corner.png", "top.png", "right_corner.png", "right.png", "water.png", "water_dirt.png", "grass_2.png", "tree.png", "slime.png"]
 
         self.clicking = False
         self.select_image = None

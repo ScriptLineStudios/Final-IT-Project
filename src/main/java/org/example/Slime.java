@@ -12,7 +12,7 @@ public class Slime extends Entity {
 
     Random random = new Random();
     int bulletCooldown;
-
+    float health;
     Texture slime;
     Texture shadow;
     Slime(float x, float y, Engine _engine) throws IOException {
@@ -28,6 +28,8 @@ public class Slime extends Entity {
         changeMove = 0;
         moveDir = new float[]{random.ints(-10, 10).findFirst().getAsInt(), random.ints(-10, 10).findFirst().getAsInt()};
         bulletCooldown = 0;
+
+        health = 40.0f;
     }
     
     private List<Object[]> getCollidingTiles(List<Object[]> world, Main game) {
@@ -93,7 +95,7 @@ public class Slime extends Entity {
                 engine.particles.add(new float[]{x + random.ints(10, 64).findFirst().getAsInt(), y + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1});
             }*/
             engine.particles.add(new float[]{x + random.ints(10, 64).findFirst().getAsInt(), y + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1, 1});
-            
+            health -= 2.0f;
 
         
         }
@@ -108,11 +110,10 @@ public class Slime extends Entity {
         movement[1] += moveDir[1] / 4;
 
         if (bulletCooldown <= 0) {
-            /*game.enemyBullets.add(new Bullet(x, y, 5.0f, 5.0f, 5, game.engine));
+            game.enemyBullets.add(new Bullet(x, y, 5.0f, 5.0f, 5, game.engine));
             game.enemyBullets.add(new Bullet(x, y, -5.0f, 5.0f, 5, game.engine));
             game.enemyBullets.add(new Bullet(x, y, -5.0f, 0.0f, 5, game.engine));
             game.enemyBullets.add(new Bullet(x, y, 5.0f, 0.0f, 5, game.engine));
-            */
             bulletCooldown = 90;
         }
         else {
@@ -126,13 +127,18 @@ public class Slime extends Entity {
     
     @Override
     public void draw(Main game) {
-        shadow.render(x - game.player.camera[0], y - game.player.camera[1] - 50, 128, 128, false, (float)Math.sin(game.globalTime*2) * 5, 1.0f);
-        slime.render(x - game.player.camera[0], y - game.player.camera[1] + (float)Math.abs(Math.sin(game.globalTime*4) * 100), 128, 128, false, 0, 1.0f);
-        if (Math.abs((float)Math.sin(game.globalTime*2) * 5) <= 0.4) {
-            slime.shader.uploadFloat("bounce", 0.8f);
+        if (health > 0) {
+            shadow.render(x - game.player.camera[0], y - game.player.camera[1] - 50, 128, 128, false, (float)Math.sin(game.globalTime*2) * 5, 1.0f);
+            slime.render(x - game.player.camera[0], y - game.player.camera[1] + (float)Math.abs(Math.sin(game.globalTime*4) * 100), 128, 128, false, 0, 1.0f);
+            if (Math.abs((float)Math.sin(game.globalTime*2) * 5) <= 0.4) {
+                slime.shader.uploadFloat("bounce", 0.8f);
+            }
+            else {
+                slime.shader.uploadFloat("bounce", 1.0f);
+            }
         }
         else {
-            slime.shader.uploadFloat("bounce", 1.0f);
+            
         }
         
     }

@@ -1,6 +1,5 @@
 package org.example;
 
-
 import java.io.*;
 import java.util.*;
 import org.json.simple.parser.*;
@@ -21,6 +20,8 @@ public class Main {
     Engine engine = new Engine();
     public List<Object[]> world;
     public List<Bullet> enemyBullets;
+    public List<Slime> slimes;
+
 
     Texture[] particleImgs;
 
@@ -46,6 +47,7 @@ public class Main {
         Texture grass_right = engine.loadTex("src/main/resources/assets/images/right.png");
         Texture water_dirt = engine.loadTex("src/main/resources/assets/images/water_dirt.png");
         Texture grass_2 = engine.loadTex("src/main/resources/assets/images/grass_2.png");
+        Texture _slime = engine.loadTex("src/main/resources/assets/images/slime.png");
 
         Texture leaf = engine.loadTex("src/main/resources/assets/images/leaf.png");
         Texture circle = engine.loadTex("src/main/resources/assets/images/circle.png");
@@ -72,14 +74,24 @@ public class Main {
         blockLookup.put("water_dirt.png", water_dirt);
         blockLookup.put("grass_2.png", grass_2);
         blockLookup.put("tree.png", tree);
+        blockLookup.put("slime.png", _slime);
 
+        //Slime slime = new Slime(200.0f, -2000.0f, engine);
+        //Slime slime2 = new Slime(700.0f, -2000.0f, engine);
 
-        Slime slime = new Slime(200.0f, -2000.0f, engine);
-        Slime slime2 = new Slime(700.0f, -2000.0f, engine);
-
+        slimes = new ArrayList<Slime>();
 
         double previousTime = glfwGetTime();
         int frameCount = 0;
+
+        for (Object[] pos:world) {
+            if (((String)pos[2]).equals("slime.png")) {
+                System.out.println("Yes");
+                slimes.add(new Slime((float)pos[0], (float)pos[1], engine));
+            }
+        }
+
+        System.out.println(slimes.size());
         
         while (engine.windowOpen()) 
         {
@@ -91,7 +103,7 @@ public class Main {
             if ( currentTime - previousTime >= 1.0 )
             {
                 // Display the frame count here any way you want.
-                // System.out.printf("FPS: %d\n", frameCount);
+                //System.out.printf("FPS: %d\n", frameCount);
                 frameCount = 0;
                 previousTime = currentTime;
             }
@@ -136,11 +148,15 @@ public class Main {
 
                 bullet.update(this);
             }
+
+            for (Slime __slime:slimes) {
+                __slime._update(this);
+            }
             engine.particles.removeAll(leafParticles);
             enemyBullets.removeAll(badBullets);
 
-            slime._update(this);
-            slime2._update(this);
+            //slime._update(this);
+            //slime2._update(this);
 
             player.update(this);
             engine.update();
