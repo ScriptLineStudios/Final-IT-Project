@@ -7,6 +7,7 @@ import java.util.List;
 public class Cat extends Entity {
     Texture[] walkAnimations;
     Engine engine;
+    boolean flipped;
 
     Texture shadow;
     Cat (float _x, float _y, Engine _engine) throws IOException {
@@ -69,12 +70,21 @@ public class Cat extends Entity {
         (game.player.x - game.player.camera[0]) - (x - game.player.camera[0]), 
         (game.player.y - game.player.camera[1]) + (y - game.player.camera[1])));
 
-        playerMovement[0] += Math.sin(Math.toRadians(_angle)) * 3;
-        playerMovement[1] -= Math.cos(Math.toRadians(_angle)) * 3;       
+        double distance = Math.sqrt((x-game.player.x)*(x-game.player.x) + (y-game.player.y)*(y-game.player.y));
+        playerMovement[0] += Math.sin(Math.toRadians(_angle)) * distance / 70;
+        playerMovement[1] -= Math.cos(Math.toRadians(_angle)) * distance / 70;       
         move(playerMovement, game.world);
+
+        if (game.player.x > x) {
+            flipped = false;
+        }
+        else {
+            flipped = true;
+        }
+
         shadow.render(x - game.player.camera[0], y - game.player.camera[1] - 55, 128, 128, flipped, 0, 1.0f);
 
-        walkAnimations[animationIndex / 8].render(x - game.player.camera[0], y - game.player.camera[1], 128, 128);
+        walkAnimations[animationIndex / 8].render(x - game.player.camera[0], y - game.player.camera[1], 128, 128, !flipped, 0.0f, 1.0f);
     }  
 
     @Override
