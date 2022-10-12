@@ -13,7 +13,6 @@ import java.nio.file.Path;
 import java.nio.*;
 import java.util.*;
 
-import static org.lwjgl.BufferUtils.*;
 import org.lwjgl.*;
 
 public class Engine {

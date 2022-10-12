@@ -101,7 +101,7 @@ public class Player extends Entity{
 
     @Override
     public void handleInput(Main game) {
-        double dt = engine.getDeltaTime();
+        //double dt = engine.getDeltaTime();
         moving = false;
         float[] playerMovement = new float[]{0.0f, 0.0f};
 

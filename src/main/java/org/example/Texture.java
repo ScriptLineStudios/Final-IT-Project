@@ -6,19 +6,12 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import java.io.*;
 import java.nio.*;
-import java.util.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.MemoryStack;
-
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.stb.STBImage.stbi_load;
-import static org.lwjgl.stb.STBImageResize.*;
 
 import org.joml.*;
-import org.joml.Math;
 
 public class Texture {
     public Shader shader;

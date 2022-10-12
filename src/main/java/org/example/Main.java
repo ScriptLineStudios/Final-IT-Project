@@ -5,23 +5,13 @@ import java.util.*;
 import org.json.simple.parser.*;
 import java.util.HashMap;
 
-import org.lwjgl.glfw.*;
-import org.lwjgl.glfw.GLFW;
-
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.system.MemoryUtil.*;
-
 
 public class Main {
     Engine engine = new Engine();
     public List<Object[]> world;
     public List<Bullet> enemyBullets;
     public List<Slime> slimes;
-
 
     Texture[] particleImgs;
 

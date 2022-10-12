@@ -1,11 +1,7 @@
 package org.example;
 
 import static org.lwjgl.opengl.GL20.*;
-
 import java.nio.FloatBuffer;
-
-import org.joml.*;
-import org.joml.Math;
 
 public class Shader {
     String vertexSource, fragmentSource;
