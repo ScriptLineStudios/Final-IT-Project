@@ -14,7 +14,7 @@ public class Main {
     public List<Slime> slimes;
 
     Texture[] particleImgs;
-
+    Cat cat;
     public Player player;
 
     float globalTime;
@@ -23,6 +23,7 @@ public class Main {
         world = World.generateArea();
         globalTime = 0;
         player = new Player(200.0f, -2000.0f, engine);
+        cat = new Cat(200.0f, -2000.0f, engine);
 
         Random random = new Random();
 
@@ -74,12 +75,16 @@ public class Main {
         double previousTime = glfwGetTime();
         int frameCount = 0;
 
+        List<Object> enemys = new ArrayList<Object>();
+
         for (Object[] pos:world) {
             if (((String)pos[2]).equals("slime.png")) {
-                System.out.println("Yes");
                 slimes.add(new Slime((float)pos[0], (float)pos[1], engine));
+                enemys.add(pos);
             }
         }
+
+        world.removeAll(enemys);
 
         System.out.println(slimes.size());
         
@@ -139,16 +144,23 @@ public class Main {
                 bullet.update(this);
             }
 
+            List<Slime> badSlimes = new ArrayList<Slime>();
+
             for (Slime __slime:slimes) {
+                if (__slime.health <= 0) {
+                    badSlimes.add(__slime);
+                }
                 __slime._update(this);
             }
+
+            slimes.removeAll(badSlimes);
             engine.particles.removeAll(leafParticles);
             enemyBullets.removeAll(badBullets);
 
             //slime._update(this);
             //slime2._update(this);
-
             player.update(this);
+            cat.update(this);
             engine.update();
             
         }

@@ -95,7 +95,7 @@ public class Slime extends Entity {
                 engine.particles.add(new float[]{x + random.ints(10, 64).findFirst().getAsInt(), y + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1});
             }*/
             engine.particles.add(new float[]{x + random.ints(10, 64).findFirst().getAsInt(), y + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1, 1});
-            health -= 2.0f;
+            health -= 0.5f;
 
         
         }
@@ -106,15 +106,15 @@ public class Slime extends Entity {
         }
         slime.shader.uploadFloat("time", game.globalTime);
 
-        movement[0] += moveDir[0] / 4;
-        movement[1] += moveDir[1] / 4;
+        movement[0] += moveDir[0] / 3;
+        movement[1] += moveDir[1] / 3;
 
         if (bulletCooldown <= 0) {
             game.enemyBullets.add(new Bullet(x, y, 5.0f, 5.0f, 5, game.engine));
             game.enemyBullets.add(new Bullet(x, y, -5.0f, 5.0f, 5, game.engine));
             game.enemyBullets.add(new Bullet(x, y, -5.0f, 0.0f, 5, game.engine));
             game.enemyBullets.add(new Bullet(x, y, 5.0f, 0.0f, 5, game.engine));
-            bulletCooldown = 90;
+            bulletCooldown = random.ints(70, 120).findFirst().getAsInt();
         }
         else {
             bulletCooldown -= 1;
