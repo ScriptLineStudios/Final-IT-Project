@@ -3,11 +3,13 @@ package org.example;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Cat extends Entity {
     Texture[] walkAnimations;
     Engine engine;
     boolean flipped;
+    float[] moveOffset;
 
     Texture shadow;
     Cat (float _x, float _y, Engine _engine) throws IOException {
@@ -21,7 +23,9 @@ public class Cat extends Entity {
             engine.loadTex("src/main/resources/assets/images/cat-sheet4.png"),
         };
         shadow = engine.loadTex("src/main/resources/assets/images/shadow.png");
-
+        Random random = new Random();
+        
+        moveOffset = new float[]{random.ints(70, 120).findFirst().getAsInt(), random.ints(70, 120).findFirst().getAsInt()};
     }
 
 
@@ -67,8 +71,8 @@ public class Cat extends Entity {
 
         float[] playerMovement = new float[]{0.0f, 0.0f};
         double _angle = Math.toDegrees(Math.atan2(
-        (game.player.x - game.player.camera[0]) - (x - game.player.camera[0]), 
-        (game.player.y - game.player.camera[1]) + (y - game.player.camera[1])));
+        ((game.player.x + moveOffset[0]) - game.player.camera[0]) - (x - game.player.camera[0]), 
+        ((game.player.y + moveOffset[1]) - game.player.camera[1]) + (y - game.player.camera[1])));
 
         double distance = Math.sqrt((x-game.player.x)*(x-game.player.x) + (y-game.player.y)*(y-game.player.y));
         playerMovement[0] += Math.sin(Math.toRadians(_angle)) * distance / 70;

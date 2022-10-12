@@ -33,7 +33,7 @@ public class Player extends Entity{
 
 
     Player(float playerX, float playerY, Engine _engine) throws IOException {
-        super(playerX, playerY, 400);
+        super(playerX, playerY, 500);
         System.out.println(y);
 
         this.engine = _engine;
