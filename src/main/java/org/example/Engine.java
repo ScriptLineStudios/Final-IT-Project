@@ -56,7 +56,7 @@ public class Engine {
         });
 
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(0);
+        glfwSwapInterval(1);
         glfwShowWindow(window);
         GL.createCapabilities();
         lastFrame = glfwGetTime();

@@ -2,6 +2,7 @@ package org.example;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -103,6 +104,7 @@ public class Player extends Entity{
             }
         }
     }
+    Random random = new Random();
 
     @Override
     public void handleInput(Main game) {
@@ -111,27 +113,33 @@ public class Player extends Entity{
         float[] playerMovement = new float[]{0.0f, 0.0f};
 
         if (engine.getKey(GLFW_KEY_D)) {
-            playerMovement[0] += moveSpeed  * dt;
+            playerMovement[0] += moveSpeed  * 1 / 60.0f;
             moving = true;
         }
         if (engine.getKey(GLFW_KEY_A)) {
-            playerMovement[0] -= moveSpeed * dt;
+            playerMovement[0] -= moveSpeed * 1 / 60.0f;
             moving = true;
         }
 
         if (engine.getKey(GLFW_KEY_W)) {
-            playerMovement[1] += moveSpeed * dt;
+            playerMovement[1] += moveSpeed * 1 / 60.0f;
             moving = true;
         }
         if (engine.getKey(GLFW_KEY_S)) {
-            playerMovement[1] -= moveSpeed * dt;
+            playerMovement[1] -= moveSpeed * 1 / 60.0f;
             moving = true;
         }
+
 
         move(playerMovement, game.world);
 
         camera[0] += (x - camera[0]) / 17;
         camera[1] += (y - camera[1]) / 17;
+    }
+
+    public void screenShake() {
+        camera[0] += (float)random.ints(-15, 15).findFirst().getAsInt();
+        camera[1] += (float)random.ints(-15, 15).findFirst().getAsInt();
     }
 
     @Override

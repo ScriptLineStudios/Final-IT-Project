@@ -11,7 +11,7 @@ class Editor:
         self.clock = pygame.time.Clock()
 
         self.blocks = {"map": []}
-        with open("map.json", "r") as f:
+        with open("map3.json", "r") as f:
             json_string = json.load(f)
             self.blocks = json_string
         
@@ -62,7 +62,7 @@ class Editor:
             self.events = pygame.event.get()
             for event in self.events:
                 if event.type == pygame.QUIT:
-                    with open("map.json", "w") as f:
+                    with open("map3.json", "w") as f:
                         for index, block in enumerate(self.blocks["map"]):
                             block.append(self.block_images[index])
                         json_string = json.dumps(self.blocks)
