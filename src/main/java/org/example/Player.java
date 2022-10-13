@@ -32,7 +32,7 @@ public class Player extends Entity{
     Texture shadow;
 
     double[] capMouse;
-
+    float health;
 
     boolean canAttack;
     Player(float playerX, float playerY, Engine _engine) throws IOException {
@@ -40,6 +40,8 @@ public class Player extends Entity{
         System.out.println(y);
 
         canAttack = true;
+
+        health = 50;
 
         this.engine = _engine;
         shadow = engine.loadTex("src/main/resources/assets/images/shadow.png");

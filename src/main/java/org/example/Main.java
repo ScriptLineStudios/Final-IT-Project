@@ -43,6 +43,9 @@ public class Main {
         Texture leaf = engine.loadTex("src/main/resources/assets/images/leaf.png");
         Texture circle = engine.loadTex("src/main/resources/assets/images/part.png");
 
+        Texture healthBar = engine.loadTex("src/main/resources/assets/images/almost_empty.png");
+        Texture health = engine.loadTex("src/main/resources/assets/images/health.png");
+
 
         particleImgs = new Texture[]{leaf, circle};
 
@@ -168,6 +171,10 @@ public class Main {
             slimes.removeAll(badSlimes);
             engine.particles.removeAll(leafParticles);
             enemyBullets.removeAll(badBullets);
+
+
+            healthBar.render(-700, 400, 256*2, 64*2);
+            health.render(-632, 432, player.health * 7, 64);
 
             //slime._update(this);
             //slime2._update(this);
