@@ -16,6 +16,13 @@ public class Slime extends Entity {
     Texture slime;
     Texture slime_attack;
     Texture img;
+    Texture dead;
+
+    boolean _dead;
+
+    float[] attackDir;
+
+    float deathTime;
 
     Texture shadow;
     Slime(float x, float y, Engine _engine) throws IOException {
@@ -29,7 +36,7 @@ public class Slime extends Entity {
         "src/main/resources/defaultVertex.glsl",
         "src/main/resources/slimeFragment.glsl", engine);
         shadow = engine.loadTex("src/main/resources/assets/images/shadow.png");
-
+        dead = engine.loadTex("src/main/resources/assets/images/dead_slime.png");
 
         changeMove = 0;
         moveDir = new float[]{random.ints(-10, 10).findFirst().getAsInt(), random.ints(-10, 10).findFirst().getAsInt()};
@@ -38,6 +45,10 @@ public class Slime extends Entity {
         health = 40.0f;
 
         img = slime;
+        _dead = false;
+
+        attackDir = new float[]{0.0f, 0.0f};
+        deathTime = 0;
     }
     
     private List<Object[]> getCollidingTiles(List<Object[]> world, Main game) {
@@ -106,9 +117,10 @@ public class Slime extends Entity {
                 engine.attackParticles.add(new float[]{x + random.ints(10, 64).findFirst().getAsInt(), y + random.ints(10, 64).findFirst().getAsInt(), random.ints(-10, 10).findFirst().getAsInt(), random.ints(-10, 10).findFirst().getAsInt(), 1.0f});
             }
             health -= 0.5f;
-            game.player.screenShake();
+            attackDir[0] = (float)Math.sin(Math.toRadians(_angle)) * (game.player.weaponTimer / 1.1f) * 2;
+            attackDir[1] = (float)Math.cos(Math.toRadians(_angle)) * (game.player.weaponTimer / 1.1f) * 2;
 
-        
+            game.player.screenShake();
         }
         if (game.player.weaponTimer <= 0) {
             slime.shader.uploadFloat("c", 1.0f);
@@ -117,9 +129,7 @@ public class Slime extends Entity {
         }
         slime.shader.uploadFloat("time", game.globalTime);
 
-        movement[0] += moveDir[0] / 3;
-        movement[1] += moveDir[1] / 3;
-
+        
         if (bulletCooldown <= 0) {
             game.enemyBullets.add(new Bullet(x, y, 5.0f, 5.0f, 5, game.engine));
             game.enemyBullets.add(new Bullet(x, y, -5.0f, 5.0f, 5, game.engine));
@@ -130,18 +140,35 @@ public class Slime extends Entity {
         else {
             bulletCooldown -= 1;
         }
-
+        
         if (bulletCooldown <= 18) {
             img = slime_attack;
         }
         else {
             img = slime;
         }
-
-
+        
+        
         //System.out.printf("X: %f Y: %f \n", moveDir[0], moveDir[1]);
+        if (health >= 0) {
+            movement[0] += moveDir[0] / 3;
+            movement[1] += moveDir[1] / 3;
+            move(movement, game.world, game);
+        }
+        else {
+            engine.attackParticles.add(new float[]{x + random.ints(10, 64).findFirst().getAsInt(), y + random.ints(10, 64).findFirst().getAsInt(), random.ints(-10, 10).findFirst().getAsInt(), random.ints(-10, 10).findFirst().getAsInt(), 1.0f});
+            x -= attackDir[0] * 2;
+            y -= attackDir[1] * 2;
+            //System.out.println(attackDir[0] * 2 + " " + attackDir[1] * 2);
+            game.player.screenShake();
+            game.player.screenShake();
+            deathTime += 1;
 
-        move(movement, game.world, game);
+        }
+
+        if (deathTime > 60) {
+            _dead = true;
+        }
     }
     
     @Override
@@ -158,7 +185,15 @@ public class Slime extends Entity {
             }
         }
         else {
-            
+            shadow.render(x - game.player.camera[0], y - game.player.camera[1] - 50, 128, 128, false, (float)Math.sin(game.globalTime*2) * 5, 1.0f);
+            dead.render(x - game.player.camera[0], y - game.player.camera[1] + (float)Math.abs(Math.sin(game.globalTime*4) * 100), 128, 128, false, 0, 1.0f);
+            if (Math.abs((float)Math.sin(game.globalTime*2) * 5) <= 0.4) {
+                img.shader.uploadFloat("bounce", 0.8f);
+            }
+            else {
+                img.shader.uploadFloat("bounce", 1.0f);
+            }
+
         }
         
     }

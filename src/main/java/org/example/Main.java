@@ -159,7 +159,7 @@ public class Main {
             List<Slime> badSlimes = new ArrayList<Slime>();
 
             for (Slime __slime:slimes) {
-                if (__slime.health <= 0) {
+                if (__slime._dead == true) {
                     badSlimes.add(__slime);
                 }
                 __slime._update(this);
