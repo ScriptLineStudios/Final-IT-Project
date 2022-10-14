@@ -13,6 +13,7 @@ public class Player extends Entity{
     Texture idleAnimations[];
     Texture walkAnimations[];
     Texture currentAnimation[];
+    Texture deathAnimations[];
 
     Texture weaponImg;
 
@@ -34,6 +35,10 @@ public class Player extends Entity{
     double[] capMouse;
     float health;
 
+    Texture loadTex(String path) throws IOException{
+        return new Texture(path, "src/main/resources/defaultVertex.glsl", "src/main/resources/playerFragment.glsl", engine);
+    }
+
     boolean canAttack;
     Player(float playerX, float playerY, Engine _engine) throws IOException {
         super(playerX, playerY, 500);
@@ -41,21 +46,33 @@ public class Player extends Entity{
 
         canAttack = true;
 
-        health = 50;
+        health = 100;
 
         this.engine = _engine;
         shadow = engine.loadTex("src/main/resources/assets/images/shadow.png");
-        idleAnimations = new Texture[]{engine.loadTex("src/main/resources/assets/images/player/player_idle1.png"),
-                                    engine.loadTex("src/main/resources/assets/images/player/player_idle2.png"),
-                                    engine.loadTex("src/main/resources/assets/images/player/player_idle3.png"),
-                                    engine.loadTex("src/main/resources/assets/images/player/player_idle4.png"),
-                                    engine.loadTex("src/main/resources/assets/images/player/player_idle5.png"),
+        idleAnimations = new Texture[]{loadTex("src/main/resources/assets/images/player/player_idle1.png"),
+                                    loadTex("src/main/resources/assets/images/player/player_idle2.png"),
+                                    loadTex("src/main/resources/assets/images/player/player_idle3.png"),
+                                    loadTex("src/main/resources/assets/images/player/player_idle4.png"),
+                                    loadTex("src/main/resources/assets/images/player/player_idle5.png"),
         };
 
-        walkAnimations = new Texture[]{engine.loadTex("src/main/resources/assets/images/player/player_walk1.png"),
-                                        engine.loadTex("src/main/resources/assets/images/player/player_walk2.png"),
-                                        engine.loadTex("src/main/resources/assets/images/player/player_walk3.png"),
-                                        engine.loadTex("src/main/resources/assets/images/player/player_walk4.png"),
+        walkAnimations = new Texture[]{loadTex("src/main/resources/assets/images/player/player_walk1.png"),
+                                        loadTex("src/main/resources/assets/images/player/player_walk2.png"),
+                                        loadTex("src/main/resources/assets/images/player/player_walk3.png"),
+                                        loadTex("src/main/resources/assets/images/player/player_walk4.png"),
+        };
+
+        deathAnimations = new Texture[]{
+            engine.loadTex("src/main/resources/assets/images/player/player_death1.png"),
+            engine.loadTex("src/main/resources/assets/images/player/player_death2.png"),
+            engine.loadTex("src/main/resources/assets/images/player/player_death3.png"),
+            engine.loadTex("src/main/resources/assets/images/player/player_death4.png"),            
+            engine.loadTex("src/main/resources/assets/images/player/player_death5.png"),
+            engine.loadTex("src/main/resources/assets/images/player/player_death6.png"),
+            engine.loadTex("src/main/resources/assets/images/player/player_death7.png"),
+            engine.loadTex("src/main/resources/assets/images/player/player_death8.png"),
+            engine.loadTex("src/main/resources/assets/images/player/player_death9.png"),
         };
 
         whitePlayerImage = engine.loadTex("src/main/resources/assets/images/player_white.png");
@@ -217,6 +234,7 @@ public class Player extends Entity{
         animationIndex = super.animate(currentAnimation, animationIndex, 8);
         shadow.render(x - camera[0], y - camera[1] - 55, 128, 128, flipped, 0, 1.0f);
         currentAnimation[animationIndex / 8].render(x - camera[0], y - camera[1], 128, 128, flipped, 0, 1.0f);
+        currentAnimation[animationIndex / 8].shader.uploadFloat("c", 1.0f);
 
 
         double mousePos[] = engine.getMousePos();
@@ -226,6 +244,10 @@ public class Player extends Entity{
         }
         else {
             weaponImg.render(x - camera[0] + weaponOffsetX + 80, y + 20 - camera[1] + weaponOffsetY, 128, 128, false, (float)angle - 140, 1.0f);
+        }
+
+        if (health <= 0) {
+            currentAnimation = deathAnimations;
         }
     }
 

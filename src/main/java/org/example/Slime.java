@@ -135,7 +135,7 @@ public class Slime extends Entity {
             game.enemyBullets.add(new Bullet(x, y, -5.0f, 5.0f, 5, game.engine));
             game.enemyBullets.add(new Bullet(x, y, -5.0f, 0.0f, 5, game.engine));
             game.enemyBullets.add(new Bullet(x, y, 5.0f, 0.0f, 5, game.engine));
-            bulletCooldown = random.ints(120, 200).findFirst().getAsInt();
+            bulletCooldown = random.ints(200, 350).findFirst().getAsInt();
         }
         else {
             bulletCooldown -= 1;

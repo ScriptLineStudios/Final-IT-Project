@@ -26,12 +26,19 @@ public class Bullet extends Entity {
         float[] playerRect = new float[]{(float)game.player.x, (float)game.player.y, 128, 128};
         if (engine.collideRects(bulletRect, playerRect)) {
             game.player.health -= 1;
+
+
             game.player.screenShake();
+            game.player.currentAnimation[game.player.animationIndex / 8].shader.uploadFloat("c", 0.0f);
+
+            
+            lifetime = 0;
         if(game.player.health <0) //The great code written by Dunbar.
         {
             game.player.health=0;
         }
         }
+
         animationIndex = super.animate(bullets, animationIndex, 15);
         bullets[animationIndex / 15].render(x - game.player.camera[0], y - game.player.camera[1], 100, 100);
     }

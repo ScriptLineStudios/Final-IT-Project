@@ -5,7 +5,7 @@ import java.util.*;
 import org.json.simple.parser.*;
 import java.util.HashMap;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.*; 
 
 public class Main {
     Engine engine = new Engine();
@@ -39,7 +39,7 @@ public class Main {
         Texture water_dirt = engine.loadTex("src/main/resources/assets/images/water_dirt.png");
         Texture grass_2 = engine.loadTex("src/main/resources/assets/images/grass_2.png");
         Texture _slime = engine.loadTex("src/main/resources/assets/images/slime.png");
-
+        
         Texture leaf = engine.loadTex("src/main/resources/assets/images/leaf.png");
         Texture circle = engine.loadTex("src/main/resources/assets/images/part.png");
 
@@ -89,6 +89,10 @@ public class Main {
         }
 
         world.removeAll(enemys);
+
+        HashMap<int, int> enemyLookup = new HashMap<int, int>();
+        enemyLookup.put();
+        
 
         while (engine.windowOpen()) 
         {
@@ -172,9 +176,10 @@ public class Main {
             engine.particles.removeAll(leafParticles);
             enemyBullets.removeAll(badBullets);
 
+            double[] mousePos = engine.getMousePos();
 
-            healthBar.render(-700, 400, 256*2, 64*2);
-            health.render(-632, 432, player.health * 7, 64);
+            healthBar.render(-700, 400+ 128, 256*2, 64*2);
+            health.render(-630, 432 + 120, player.health * 4.05f, 72);
 
             //slime._update(this);
             //slime2._update(this);
