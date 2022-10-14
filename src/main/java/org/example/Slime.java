@@ -166,8 +166,9 @@ public class Slime extends Entity {
 
         }
 
-        if (deathTime > 60) {
+        if (deathTime == 60) {
             _dead = true;
+            game.player.kills++;
         }
     }
     

@@ -27,7 +27,6 @@ public class Bullet extends Entity {
         if (engine.collideRects(bulletRect, playerRect)) {
             game.player.health -= 1;
 
-
             game.player.screenShake();
             game.player.currentAnimation[game.player.animationIndex / 8].shader.uploadFloat("c", 0.0f);
 

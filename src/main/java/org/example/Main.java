@@ -17,17 +17,27 @@ public class Main {
     Cat cat;
     public Player player;
 
+    Random random;
+    int currentMap;
+
     float globalTime;
-    private void run() throws ParseException, IOException, FileNotFoundException {
+    private void run() throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
+        random = new Random();
+        currentMap = random.ints(0, 4).findFirst().getAsInt();
+        world = World.generateArea(currentMap);
         engine.init();
-        world = World.generateArea();
         globalTime = 0;
         player = new Player(200.0f, -2000.0f, engine);
         cat = new Cat(200.0f, -2000.0f, engine);
 
-        Random random = new Random();
 
         enemyBullets = new ArrayList<Bullet>();
+
+        HashMap<Integer, Integer> enemyLookup = new HashMap<Integer, Integer>();
+        enemyLookup.put(0, 6);
+        enemyLookup.put(1, 9);
+        enemyLookup.put(2, 7);
+        enemyLookup.put(3, 8);
 
         Texture block = engine.loadTex("src/main/resources/assets/images/block.png");
         Texture grass = engine.loadTex("src/main/resources/assets/images/grass.png");
@@ -45,7 +55,12 @@ public class Main {
 
         Texture healthBar = engine.loadTex("src/main/resources/assets/images/almost_empty.png");
         Texture health = engine.loadTex("src/main/resources/assets/images/health.png");
+        
+        Texture levelComplete = engine.loadTex("src/main/resources/assets/images/level_complete.png");
 
+        Texture _againButton = engine.loadTex("src/main/resources/assets/images/again_button.png");
+
+        Button againButton = new Button(_againButton);
 
         particleImgs = new Texture[]{leaf, circle};
 
@@ -56,7 +71,7 @@ public class Main {
         Texture water = new Texture("src/main/resources/assets/images/water.png", 
             "src/main/resources/defaultVertex.glsl",
             "src/main/resources/waterFragment.glsl", engine);
-        
+
         HashMap<String, Texture> blockLookup = new HashMap<String, Texture>();
         blockLookup.put("block.png", block);
         blockLookup.put("grass.png", grass);
@@ -81,6 +96,8 @@ public class Main {
 
         List<Object> enemys = new ArrayList<Object>();
 
+        float gameOverSize = 1.0f;
+
         for (Object[] pos:world) {
             if (((String)pos[2]).equals("slime.png")) {
                 slimes.add(new Slime((float)pos[0], (float)pos[1], engine));
@@ -89,10 +106,6 @@ public class Main {
         }
 
         world.removeAll(enemys);
-
-        HashMap<int, int> enemyLookup = new HashMap<int, int>();
-        enemyLookup.put();
-        
 
         while (engine.windowOpen()) 
         {
@@ -124,6 +137,8 @@ public class Main {
                     }
                 }
             }
+
+
 
             List<float[]> leafParticles = new ArrayList<float[]>();
 
@@ -178,6 +193,8 @@ public class Main {
 
             double[] mousePos = engine.getMousePos();
 
+            block.render((float)mousePos[0], (float)-mousePos[1], 16, 16);
+
             healthBar.render(-700, 400+ 128, 256*2, 64*2);
             health.render(-630, 432 + 120, player.health * 4.05f, 72);
 
@@ -185,12 +202,24 @@ public class Main {
             //slime2._update(this);
             player.update(this);
             cat.update(this);
+
+
+            if (player.kills >= enemyLookup.get(currentMap)) {
+                levelComplete.render(-700, -400, 200* gameOverSize, 128 * gameOverSize);
+                if (gameOverSize < 7.0f) {
+                    gameOverSize += 0.1;
+                }
+                else {
+                    againButton.update(-200, -500, 128 * 4, 64 * 4, this);
+                }
+                
+            }
             engine.update();
             
         }
     }
 
-    public static void main(String[] args) throws ParseException, IOException, FileNotFoundException {
+    public static void main(String[] args) throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
         new Main().run();
     }
 }

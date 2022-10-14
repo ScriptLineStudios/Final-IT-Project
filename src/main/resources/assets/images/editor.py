@@ -1,17 +1,19 @@
 import pygame
 import json
+import sys
 
 from gui import Button, GuiManager
 
 TILE_SIZE = 16
 
 class Editor:
-    def __init__(self):
+    def __init__(self, map_name):
+        self.map_name = map_name
         self.display = pygame.display.set_mode((700, 700))
         self.clock = pygame.time.Clock()
 
         self.blocks = {"map": []}
-        with open("map3.json", "r") as f:
+        with open(self.map_name, "r") as f:
             json_string = json.load(f)
             self.blocks = json_string
         
@@ -62,7 +64,7 @@ class Editor:
             self.events = pygame.event.get()
             for event in self.events:
                 if event.type == pygame.QUIT:
-                    with open("map3.json", "w") as f:
+                    with open(self.map_name, "w") as f:
                         for index, block in enumerate(self.blocks["map"]):
                             block.append(self.block_images[index])
                         json_string = json.dumps(self.blocks)
@@ -158,4 +160,4 @@ class Editor:
             pygame.display.update()
             self.clock.tick(60)
 
-Editor().main()
+Editor(sys.argv[1]).main()

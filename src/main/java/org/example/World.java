@@ -9,8 +9,8 @@ import org.json.simple.*;
 import org.json.simple.parser.*;
 
 public class World {
-    public static List<Object[]> generateArea() throws ParseException, IOException, FileNotFoundException {
-        JSONArray worldData = ParseJson.parse();
+    public static List<Object[]> generateArea(int mapIndex) throws ParseException, IOException, FileNotFoundException {
+        JSONArray worldData = ParseJson.parse(mapIndex);
         List<Object[]> returnData = new ArrayList<Object[]>();
 
         Iterator iterator = worldData.iterator();

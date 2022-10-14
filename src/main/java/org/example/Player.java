@@ -39,6 +39,8 @@ public class Player extends Entity{
         return new Texture(path, "src/main/resources/defaultVertex.glsl", "src/main/resources/playerFragment.glsl", engine);
     }
 
+    int kills;
+
     boolean canAttack;
     Player(float playerX, float playerY, Engine _engine) throws IOException {
         super(playerX, playerY, 500);
@@ -47,6 +49,7 @@ public class Player extends Entity{
         canAttack = true;
 
         health = 100;
+        kills = 0;
 
         this.engine = _engine;
         shadow = engine.loadTex("src/main/resources/assets/images/shadow.png");
