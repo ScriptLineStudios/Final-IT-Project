@@ -21,6 +21,24 @@ public class Button {
             if (game.engine.collideRects(mouseRect, buttonRect)) {
                 game.player.kills = 0;
                 game.currentMap = game.random.ints(0, 4).findFirst().getAsInt();
+                try {
+                    game.world = game.genMap(game.currentMap);
+                    game.player.x = 200.0f;
+                    game.player.y = -2000.0f;
+
+                    for (Object[] pos:game.world) {
+                        if (((String)pos[2]).equals("slime.png")) {
+                            game.slimes.add(new Slime((float)pos[0], (float)pos[1], game.engine));
+                            game.enemys.add(pos);
+                        }
+                        
+                    }
+                    game.world.removeAll(game.enemys);
+
+                }
+                catch (Exception e) {
+                    
+                }
             }
         }
     }   

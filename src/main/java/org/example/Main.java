@@ -20,16 +20,19 @@ public class Main {
     Random random;
     int currentMap;
 
+    public List<Object[]> genMap(int map) throws ParseException, IOException, FileNotFoundException, java.text.ParseException{
+        return World.generateArea(map);
+    }
+    List<Object> enemys;
     float globalTime;
-    private void run() throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
+    public void run() throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
         random = new Random();
-        currentMap = random.ints(0, 4).findFirst().getAsInt();
+        currentMap = random.ints(0, 5).findFirst().getAsInt();
         world = World.generateArea(currentMap);
         engine.init();
         globalTime = 0;
         player = new Player(200.0f, -2000.0f, engine);
         cat = new Cat(200.0f, -2000.0f, engine);
-
 
         enemyBullets = new ArrayList<Bullet>();
 
@@ -38,6 +41,7 @@ public class Main {
         enemyLookup.put(1, 9);
         enemyLookup.put(2, 7);
         enemyLookup.put(3, 8);
+        enemyLookup.put(4, 9);
 
         Texture block = engine.loadTex("src/main/resources/assets/images/block.png");
         Texture grass = engine.loadTex("src/main/resources/assets/images/grass.png");
@@ -94,7 +98,7 @@ public class Main {
         double previousTime = glfwGetTime();
         int frameCount = 0;
 
-        List<Object> enemys = new ArrayList<Object>();
+        enemys = new ArrayList<Object>();
 
         float gameOverSize = 1.0f;
 
@@ -126,10 +130,10 @@ public class Main {
             for (Object[] pos:world) {
                 if (Math.abs((float)pos[0] - player.x) < 1300) {
                     if (((String)pos[2]).equals("tree.png")) {
-                        blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 128, 256);
-                        if (random.ints(0, 40).findFirst().getAsInt() == 1) {
-                            engine.particles.add(new float[]{(float)pos[0] + random.ints(10, 64).findFirst().getAsInt(), (float)pos[1] + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1, 0});
-                        }                    
+                    blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 128, 256);
+                    if (random.ints(0, 40).findFirst().getAsInt() == 1) {
+                        engine.particles.add(new float[]{(float)pos[0] + random.ints(10, 64).findFirst().getAsInt(), (float)pos[1] + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1, 0});
+                    }                    
                     }
                     else {
                         blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 128, 128);

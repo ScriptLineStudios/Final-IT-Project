@@ -134,9 +134,10 @@ class Editor:
             self.offset_y += pygame.key.get_pressed()[pygame.K_s] * 10
             self.offset_y -= pygame.key.get_pressed()[pygame.K_w] * 10
 
+            self.gui_manager.draw_gui_elements(self.display, self.events)
 
             if not self.highlighting:
-                if my > 60:
+                try:
                     if self.clicking:
                         should_place = False
                         if not [((mx)//TILE_SIZE)*TILE_SIZE, ((my)//TILE_SIZE)*TILE_SIZE, TILE_SIZE, TILE_SIZE] in self.blocks["map"]:
@@ -149,13 +150,14 @@ class Editor:
                             if self.blocks["map"][idx] == [((mx) // TILE_SIZE) * TILE_SIZE, ((my) // TILE_SIZE) * TILE_SIZE, block[2], block[3]]:
                                 self.blocks["map"].pop(idx)
                                 self.block_images.pop(idx)
+                except:
+                    pass
             else:
                 if self.clicking:
                     self.highlight_rect = pygame.Rect(self.click_pos[0], self.click_pos[1], abs(self.click_pos[0] - (mx - self.offset_x)), abs(self.click_pos[1] - (my - self.offset_y )))
                 if self.highlight_rect is not None:
                     pygame.draw.rect(self.display, (255, 255, 255), self.highlight_rect, 1)
 
-            self.gui_manager.draw_gui_elements(self.display, self.events)
 
             pygame.display.update()
             self.clock.tick(60)

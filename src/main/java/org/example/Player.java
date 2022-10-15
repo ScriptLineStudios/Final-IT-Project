@@ -92,7 +92,7 @@ public class Player extends Entity{
     }
 
     private List<Object[]> getCollidingTiles(List<Object[]> world) {
-        List<Object[]> collidingTiles = new ArrayList<Object[]>();
+        List<Object[]> collidingTiles = new ArrayList<Object[]>(); 
         for (Object[] pos:world) {
             float[] tileRect = new float[]{(float)pos[0], (float)pos[1], 128, 128};
             float[] playerRect = new float[]{(float)x, (float)y, 128, 128};
@@ -104,18 +104,23 @@ public class Player extends Entity{
     }
 
     private void move(float[] playerMovement, List<Object[]> world) {
+
+        ////////////////////////////// X
         x += playerMovement[0];
         List<Object[]> collidingTiles = getCollidingTiles(world);
         for (Object[] pos:collidingTiles) {
-            if (playerMovement[0] > 0) {
+            if (playerMovement[0] > 0) { //right: x > 0 playerMovement: [-3, 0]
                 x = (float)pos[0] - 129;
             }
-            else if (playerMovement[0] < 0) {
+            else if (playerMovement[0] < 0) { //left: x < 0
                 x = (float)pos[0] + 129;
             }
         }
+        ////////////////////////////// END OF X
 
-        y += playerMovement[1];
+
+        ///////////////////////////// Y
+        y += playerMovement[1]; 
         collidingTiles = getCollidingTiles(world);
         for (Object[] pos:collidingTiles) {
             if (playerMovement[1] > 0) {
@@ -125,6 +130,7 @@ public class Player extends Entity{
                 y = (float)pos[1] + 129;
             }
         }
+        ///////////////////////////// END OF Y
     }
     Random random = new Random();
 
@@ -135,23 +141,24 @@ public class Player extends Entity{
         float[] playerMovement = new float[]{0.0f, 0.0f};
 
         if (engine.getKey(GLFW_KEY_D)) {
-            playerMovement[0] += moveSpeed  * 1 / 60.0f;
+            playerMovement[0] += moveSpeed  * 1 / 60.0f; //x
             moving = true;
         }
         if (engine.getKey(GLFW_KEY_A)) {
-            playerMovement[0] -= moveSpeed * 1 / 60.0f;
+            playerMovement[0] -= moveSpeed * 1 / 60.0f; //x
             moving = true;
         }
 
         if (engine.getKey(GLFW_KEY_W)) {
-            playerMovement[1] += moveSpeed * 1 / 60.0f;
+            playerMovement[1] += moveSpeed * 1 / 60.0f; //y
             moving = true;
         }
         if (engine.getKey(GLFW_KEY_S)) {
-            playerMovement[1] -= moveSpeed * 1 / 60.0f;
+            playerMovement[1] -= moveSpeed * 1 / 60.0f; //y
             moving = true;
         }
 
+        // -> direction of our player
 
         move(playerMovement, game.world);
 

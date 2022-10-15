@@ -132,10 +132,12 @@ public class Engine {
         float rect2_w = rect2[2];
         float rect2_h = rect2[3];
 
-        if (rect1_x     < rect2_x     + rect2_w &&
-        rect1_x     + rect1_w > rect2_x     &&
-        rect1_y    < rect2_y     + rect2_h &&
-        rect1_h + rect1_y     > rect2_y) {
+        if (rect1_x < rect2_x + rect2_w &&
+            rect1_x + rect1_w > rect2_x &&
+            rect1_y < rect2_y + rect2_h &&
+            rect1_h + rect1_y > rect2_y
+        ) {
+
             return true;
         }
         
