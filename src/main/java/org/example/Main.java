@@ -25,6 +25,10 @@ public class Main {
     }
     List<Object> enemys;
     float globalTime;
+    public float zoom = 1.0f;
+    Texture youDied;
+    float gameOverSize;
+    Button againButton;
     public void run() throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
         random = new Random();
         currentMap = random.ints(0, 5).findFirst().getAsInt();
@@ -61,10 +65,10 @@ public class Main {
         Texture health = engine.loadTex("src/main/resources/assets/images/health.png");
         
         Texture levelComplete = engine.loadTex("src/main/resources/assets/images/level_complete.png");
-
         Texture _againButton = engine.loadTex("src/main/resources/assets/images/again_button.png");
+        againButton = new Button(_againButton);
 
-        Button againButton = new Button(_againButton);
+        youDied = engine.loadTex("src/main/resources/assets/images/you_died.png");
 
         particleImgs = new Texture[]{leaf, circle};
 
@@ -90,6 +94,7 @@ public class Main {
         blockLookup.put("tree.png", tree);
         blockLookup.put("slime.png", _slime);
 
+
         //Slime slime = new Slime(200.0f, -2000.0f, engine);
         //Slime slime2 = new Slime(700.0f, -2000.0f, engine);
 
@@ -100,7 +105,7 @@ public class Main {
 
         enemys = new ArrayList<Object>();
 
-        float gameOverSize = 1.0f;
+        gameOverSize = 1.0f;
 
         for (Object[] pos:world) {
             if (((String)pos[2]).equals("slime.png")) {
@@ -130,13 +135,13 @@ public class Main {
             for (Object[] pos:world) {
                 if (Math.abs((float)pos[0] - player.x) < 1300) {
                     if (((String)pos[2]).equals("tree.png")) {
-                    blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 128, 256);
+                    blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 128 * zoom, 256 * zoom);
                     if (random.ints(0, 40).findFirst().getAsInt() == 1) {
                         engine.particles.add(new float[]{(float)pos[0] + random.ints(10, 64).findFirst().getAsInt(), (float)pos[1] + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1, 0});
                     }                    
                     }
                     else {
-                        blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 128, 128);
+                        blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 128 * zoom, 128 * zoom);
                         blockLookup.get((String)pos[2]).shader.uploadFloat("time", globalTime);                        
                     }
                 }
@@ -172,6 +177,7 @@ public class Main {
 
             List<Bullet> badBullets = new ArrayList<Bullet>();
 
+            
             for (Bullet bullet:enemyBullets) {
                 if (bullet.lifetime <= 0) {
                     badBullets.add(bullet);
@@ -184,11 +190,15 @@ public class Main {
 
             List<Slime> badSlimes = new ArrayList<Slime>();
 
-            for (Slime __slime:slimes) {
-                if (__slime._dead == true) {
-                    badSlimes.add(__slime);
+                        
+            if (player.health > 0) {
+                for (Slime __slime:slimes) {
+                    if (__slime._dead == true) {
+                        badSlimes.add(__slime);
+                    }
+                    __slime._update(this);
                 }
-                __slime._update(this);
+                
             }
 
             slimes.removeAll(badSlimes);
@@ -204,8 +214,11 @@ public class Main {
 
             //slime._update(this);
             //slime2._update(this);
-            player.update(this);
-            cat.update(this);
+            player._update(this);
+
+            if (player.health > 0) {
+                cat.update(this);
+            }
 
 
             if (player.kills >= enemyLookup.get(currentMap)) {

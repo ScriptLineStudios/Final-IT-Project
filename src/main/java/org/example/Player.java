@@ -1,6 +1,8 @@
 package org.example;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
@@ -44,7 +46,6 @@ public class Player extends Entity{
     boolean canAttack;
     Player(float playerX, float playerY, Engine _engine) throws IOException {
         super(playerX, playerY, 500);
-        System.out.println(y);
 
         canAttack = true;
 
@@ -162,22 +163,24 @@ public class Player extends Entity{
 
         move(playerMovement, game.world);
 
-        camera[0] += (x - camera[0]) / 17;
-        camera[1] += (y - camera[1]) / 17;
+        camera[0] += (x - camera[0]) / 27;
+        camera[1] += (y - camera[1]) / 27;
     }
 
     public void screenShake() {
-        camera[0] += (float)random.ints(-15, 15).findFirst().getAsInt();
-        camera[1] += (float)random.ints(-15, 15).findFirst().getAsInt();
+        camera[0] += (float)random.ints(-10, 10).findFirst().getAsInt();
+        camera[1] += (float)random.ints(-10, 10).findFirst().getAsInt();
     }
 
     @Override
     public void handleAnimationState() {
-        if (moving) {
-            currentAnimation = walkAnimations;
-        }
-        else {
-            currentAnimation = idleAnimations;
+        if (health > 0) {
+            if (moving) {
+                currentAnimation = walkAnimations;
+            }
+            else {
+                currentAnimation = idleAnimations;
+            }
         }
     }
 
@@ -224,26 +227,31 @@ public class Player extends Entity{
         if (glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) canAttack = true;
     }
 
-    @Override
-    public void draw(Main game) {        
+    public void _draw(Main game) throws ParseException, IOException, FileNotFoundException, ParseException {        
         if (engine.getMousePos()[0] > 0) {
             flipped = false;
         }
+        
         else {
             flipped = true;
-        } 
+        }
+
         for (float[] pos:playerWhiteImages) {
             if (pos[2] < 0) {
             }
         }
+
         for (float[] pos:playerWhiteImages) {
             pos[2] -= 0.1f;
             whitePlayerImage.render(pos[0] - camera[0], pos[1] - camera[1], 128, 128, false, 0, pos[2]);
         }
 
-        animationIndex = super.animate(currentAnimation, animationIndex, 8);
+        if (health > 0) {
+            animationIndex = super.animate(currentAnimation, animationIndex, 8);
+        }
+
         shadow.render(x - camera[0], y - camera[1] - 55, 128, 128, flipped, 0, 1.0f);
-        currentAnimation[animationIndex / 8].render(x - camera[0], y - camera[1], 128, 128, flipped, 0, 1.0f);
+        currentAnimation[animationIndex / 8].render(x - camera[0], y - camera[1], 128 * game.zoom, 128 * game.zoom, flipped, 0, 1.0f);
         currentAnimation[animationIndex / 8].shader.uploadFloat("c", 1.0f);
 
 
@@ -257,16 +265,31 @@ public class Player extends Entity{
         }
 
         if (health <= 0) {
+            if (game.zoom < 3.0f) {
+                game.zoom += 0.01f;
+                screenShake();
+            }
+            if (game.zoom >= 3.0f) {
+                if (animationIndex < 71) {
+                    animationIndex = super.animate(currentAnimation, animationIndex, 8);
+                }
+                game.youDied.render(-700, -400, 200* game.gameOverSize, 128 * game.gameOverSize);
+                if (game.gameOverSize < 7.0f) {
+                    game.gameOverSize += 0.1;
+                }
+                else {
+                    game.againButton.update(-200, -500, 128 * 4, 64 * 4, game);
+                }
+            }
             currentAnimation = deathAnimations;
         }
     }
 
-    @Override
-    public void update(Main game) {
+    public void _update(Main game) throws ParseException, IOException, FileNotFoundException, ParseException {
         handleMouseClicks(game);
         handleInput(game);
         handleAnimationState();
-        draw(game);
+        _draw(game);
     }
 
 }
