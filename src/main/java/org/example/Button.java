@@ -25,6 +25,8 @@ public class Button {
                     game.world = game.genMap(game.currentMap);
                     game.player.x = 200.0f;
                     game.player.y = -2000.0f;
+                    game.player.health = 100.0f;
+                    game.zoom = 1.0f;
 
                     for (Object[] pos:game.world) {
                         if (((String)pos[2]).equals("slime.png")) {

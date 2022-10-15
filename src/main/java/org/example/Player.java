@@ -49,7 +49,7 @@ public class Player extends Entity{
 
         canAttack = true;
 
-        health = 100;
+        health = 1;
         kills = 0;
 
         this.engine = _engine;
@@ -77,6 +77,8 @@ public class Player extends Entity{
             engine.loadTex("src/main/resources/assets/images/player/player_death7.png"),
             engine.loadTex("src/main/resources/assets/images/player/player_death8.png"),
             engine.loadTex("src/main/resources/assets/images/player/player_death9.png"),
+            engine.loadTex("src/main/resources/assets/images/player/player_death10.png"),
+            engine.loadTex("src/main/resources/assets/images/player/player_death11.png"),
         };
 
         whitePlayerImage = engine.loadTex("src/main/resources/assets/images/player_white.png");
@@ -270,7 +272,7 @@ public class Player extends Entity{
                 screenShake();
             }
             if (game.zoom >= 3.0f) {
-                if (animationIndex < 71) {
+                if (animationIndex < 87) {
                     animationIndex = super.animate(currentAnimation, animationIndex, 8);
                 }
                 game.youDied.render(-700, -400, 200* game.gameOverSize, 128 * game.gameOverSize);
@@ -278,7 +280,7 @@ public class Player extends Entity{
                     game.gameOverSize += 0.1;
                 }
                 else {
-                    game.againButton.update(-200, -500, 128 * 4, 64 * 4, game);
+                    game.againButton.update(-200, -560, 128 * 4, 64 * 4, game);
                 }
             }
             currentAnimation = deathAnimations;

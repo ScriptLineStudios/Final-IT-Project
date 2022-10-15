@@ -118,6 +118,7 @@ public class Main {
 
         while (engine.windowOpen()) 
         {
+            System.gc();
             globalTime += engine.getDeltaTime();
             // Measure speed
             double currentTime = glfwGetTime();
@@ -135,13 +136,13 @@ public class Main {
             for (Object[] pos:world) {
                 if (Math.abs((float)pos[0] - player.x) < 1300) {
                     if (((String)pos[2]).equals("tree.png")) {
-                    blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 128 * zoom, 256 * zoom);
+                    blockLookup.get((String)pos[2]).render(((float)pos[0] - player.camera[0]) * zoom, ((float)pos[1] - player.camera[1]) * zoom, 128 * zoom, 256 * zoom);
                     if (random.ints(0, 40).findFirst().getAsInt() == 1) {
                         engine.particles.add(new float[]{(float)pos[0] + random.ints(10, 64).findFirst().getAsInt(), (float)pos[1] + random.ints(10, 64).findFirst().getAsInt(), 10, 10, random.ints(0, 64).findFirst().getAsInt(), 1, 0});
                     }                    
                     }
                     else {
-                        blockLookup.get((String)pos[2]).render((float)pos[0] - player.camera[0], (float)pos[1] - player.camera[1], 128 * zoom, 128 * zoom);
+                        blockLookup.get((String)pos[2]).render(((float)pos[0] - player.camera[0]) * zoom, ((float)pos[1] - player.camera[1]) * zoom, 128 * zoom, 128 * zoom);
                         blockLookup.get((String)pos[2]).shader.uploadFloat("time", globalTime);                        
                     }
                 }
