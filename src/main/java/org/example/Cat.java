@@ -65,6 +65,11 @@ public class Cat extends Entity {
         }
     }
 
+    public void menuRender(Main game) {
+        animationIndex = super.animate(walkAnimations, animationIndex, 8);
+        walkAnimations[animationIndex / 8].render(x, y, 256, 256, false, 0.0f, 1.0f);
+    }
+
     @Override
     public void draw(Main game) {
         animationIndex = super.animate(walkAnimations, animationIndex, 8);

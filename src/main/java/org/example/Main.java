@@ -1,3 +1,9 @@
+/*
+***** Main.java *****
+
+*/
+
+
 package org.example;
 
 import java.io.*;
@@ -29,6 +35,15 @@ public class Main {
     Texture youDied;
     float gameOverSize;
     Button againButton;
+
+    public void petMenu(Cat cat, Engine menuEngine) throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
+        while (menuEngine.windowOpen()) {
+            menuEngine.clear(0.0f, 0.0f, 0.0f);
+            cat.menuRender(this);
+            menuEngine.update();
+        }
+    }
+
     public void run() throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
         random = new Random();
         currentMap = random.ints(0, 5).findFirst().getAsInt();
@@ -116,9 +131,12 @@ public class Main {
 
         world.removeAll(enemys);
 
+        Text testText = new Text("hello world", 0.0f, 0.0f, 0.0f, engine);
+        System.out.println(engine.textureIndex);
+        petMenu(cat, engine);
+
         while (engine.windowOpen()) 
         {
-            System.gc();
             globalTime += engine.getDeltaTime();
             // Measure speed
             double currentTime = glfwGetTime();
@@ -126,6 +144,7 @@ public class Main {
             // If a second has passed.
             if ( currentTime - previousTime >= 1.0 )
             {
+                System.gc();
                 // Display the frame count here any way you want.
                 // System.out.printf("FPS: %d\n", frameCount);
                 frameCount = 0;
@@ -213,8 +232,6 @@ public class Main {
             healthBar.render(-700, 400+ 128, 256*2, 64*2);
             health.render(-630, 432 + 120, player.health * 4.05f, 72);
 
-            //slime._update(this);
-            //slime2._update(this);
             player._update(this);
 
             if (player.health > 0) {
@@ -232,6 +249,7 @@ public class Main {
                 }
                 
             }
+            //testText.render_text();
             engine.update();
             
         }

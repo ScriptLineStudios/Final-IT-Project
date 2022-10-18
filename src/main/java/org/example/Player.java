@@ -204,7 +204,7 @@ public class Player extends Entity{
 
             move(playerMovement, game.world);
 
-            if (weaponTimer % 2 == 0) playerWhiteImages.add(new float[]{x, y, 1});
+            if (weaponTimer % 2 == 0) playerWhiteImages.add(new float[]{x, y, 1, 10.0f});
 
             weaponTimer--;
         }
@@ -238,15 +238,16 @@ public class Player extends Entity{
             flipped = true;
         }
 
-        for (float[] pos:playerWhiteImages) {
-            if (pos[2] < 0) {
-            }
-        }
-
+        List<float[]> badPlayerWhiteImages = new ArrayList<float[]>();
         for (float[] pos:playerWhiteImages) {
             pos[2] -= 0.1f;
+            pos[3] -= 1.0f;
+            if (pos[3] <= 0) {
+                badPlayerWhiteImages.add(pos);
+            } 
             whitePlayerImage.render(pos[0] - camera[0], pos[1] - camera[1], 128, 128, false, 0, pos[2]);
         }
+        badPlayerWhiteImages.removeAll(badPlayerWhiteImages);
 
         if (health > 0) {
             animationIndex = super.animate(currentAnimation, animationIndex, 8);
