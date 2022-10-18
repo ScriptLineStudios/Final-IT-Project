@@ -19,18 +19,19 @@ public class Text {
         lookup = new HashMap<String, Texture>();
         String alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-        for (int x = 0; x < alphabet.length(); x++) {
-            String _char = Character.toString(alphabet.charAt(x));
-            String path = "src/main/resources/assets/alphabet/" + _char + ".png";
+        for (int x = 1; x <= alphabet.length(); x++) {
+            String _char = Character.toString(alphabet.charAt(x - 1));
+            String path = "src/main/resources/assets/images/alphabet/alphabet" + x + ".png";
+            System.out.println(path);
             lookup.put(_char, engine.loadTex(path));
         }
-        lookup.put(" ", engine.loadTex("src/main/resources/assets/alphabet/space.png"));
+        lookup.put(" ", engine.loadTex("src/main/resources/assets/images/alphabet/space.png"));
     }
 
     void render_text() {
         for (int i = 0; i < text.length(); i++) {
             String _char = Character.toString(text.charAt(i));
-            lookup.get(_char).render(x * i * 2, y, 128, 128);
+            lookup.get(_char).render(x + i * 100, y, 128, 128);
         }
     }
 }

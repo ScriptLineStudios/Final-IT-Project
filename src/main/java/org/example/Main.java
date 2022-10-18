@@ -38,8 +38,9 @@ public class Main {
 
     public void petMenu(Cat cat, Engine menuEngine) throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
         while (menuEngine.windowOpen()) {
-            menuEngine.clear(0.0f, 0.0f, 0.0f);
-            cat.menuRender(this);
+            menuEngine.clear(1.0f, 1.0f, 1.0f);
+            cat.animationIndex = cat.animate(cat.walkAnimations, cat.animationIndex, 8);
+            cat.walkAnimations[cat.animationIndex / 8].render(0, 0, 256, 256);
             menuEngine.update();
         }
     }
@@ -131,9 +132,9 @@ public class Main {
 
         world.removeAll(enemys);
 
-        Text testText = new Text("hello world", 0.0f, 0.0f, 0.0f, engine);
+        Text testText = new Text("hello world", -400.0f, 0.0f, 0.0f, engine);
         System.out.println(engine.textureIndex);
-        petMenu(cat, engine);
+        //petMenu(cat, engine);
 
         while (engine.windowOpen()) 
         {
@@ -249,7 +250,7 @@ public class Main {
                 }
                 
             }
-            //testText.render_text();
+            testText.render_text();
             engine.update();
             
         }
