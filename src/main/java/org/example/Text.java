@@ -31,7 +31,7 @@ public class Text {
     void render_text() {
         for (int i = 0; i < text.length(); i++) {
             String _char = Character.toString(text.charAt(i));
-            lookup.get(_char).render(x + i * 100, y, 128, 128);
+            lookup.get(_char).render(x + i * (size - 50), y, size, size);
         }
     }
 }

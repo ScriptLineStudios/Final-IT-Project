@@ -276,7 +276,13 @@ public class Player extends Entity{
                 if (animationIndex < 87) {
                     animationIndex = super.animate(currentAnimation, animationIndex, 8);
                 }
-                game.youDied.render(-700, -400, 200* game.gameOverSize, 128 * game.gameOverSize);
+                //game.youDied.render(-700, -400, 200* game.gameOverSize, 128 * game.gameOverSize);
+                game.textYou.size = 32 * game.gameOverSize;
+                game.textDied.size = 32 * game.gameOverSize;
+
+                game.textYou.render_text();
+                game.textDied.render_text();
+
                 if (game.gameOverSize < 7.0f) {
                     game.gameOverSize += 0.1;
                 }

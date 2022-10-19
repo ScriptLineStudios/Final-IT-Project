@@ -45,6 +45,9 @@ public class Main {
         }
     }
 
+    Text textYou;
+    Text textDied;
+
     public void run() throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
         random = new Random();
         currentMap = random.ints(0, 5).findFirst().getAsInt();
@@ -82,7 +85,7 @@ public class Main {
         
         Texture levelComplete = engine.loadTex("src/main/resources/assets/images/level_complete.png");
         Texture _againButton = engine.loadTex("src/main/resources/assets/images/again_button.png");
-        againButton = new Button(_againButton);
+        againButton = new Button(_againButton, "again", engine);
 
         youDied = engine.loadTex("src/main/resources/assets/images/you_died.png");
 
@@ -132,7 +135,9 @@ public class Main {
 
         world.removeAll(enemys);
 
-        Text testText = new Text("hello world", -400.0f, 0.0f, 0.0f, engine);
+        textYou = new Text("you", -200.0f, 0.0f, 256.0f, engine);
+        textDied = new Text("died", -200.0f, -256.0f, 256.0f, engine);
+
         System.out.println(engine.textureIndex);
         //petMenu(cat, engine);
 
@@ -250,7 +255,8 @@ public class Main {
                 }
                 
             }
-            testText.render_text();
+
+
             engine.update();
             
         }

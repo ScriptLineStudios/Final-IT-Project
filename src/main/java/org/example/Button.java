@@ -8,8 +8,10 @@ import java.text.ParseException;
 
 public class Button {
     Texture texture;
-    Button (Texture _texture) {
+    Text text;
+    Button (Texture _texture, String _text, Engine eng) throws IOException {
         texture = _texture;
+        text = new Text(_text, 0, 0, 0, eng);
     }
 
     public void onClick(float x, float y, float width, float height, Main game) throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
@@ -47,6 +49,10 @@ public class Button {
 
     public void update(float x, float y, float width, float height, Main game) throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
         onClick(x, y, width, height, game);
-        texture.render(x, y, width, height);
+        texture.render(x - 35, y, width + 35, height);
+        text.x = x - 35;
+        text.y = y;
+        text.size = 160.0f;
+        text.render_text();
     }
 }

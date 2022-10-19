@@ -156,7 +156,7 @@ public class Slime extends Entity {
             move(movement, game.world, game);
         }
         else {
-            engine.attackParticles.add(new float[]{x + random.ints(10, 64).findFirst().getAsInt(), y + random.ints(10, 64).findFirst().getAsInt(), random.ints(-10, 10).findFirst().getAsInt(), random.ints(-10, 10).findFirst().getAsInt(), 1.0f});
+            //engine.attackParticles.add(new float[]{x + random.ints(10, 64).findFirst().getAsInt(), y + random.ints(10, 64).findFirst().getAsInt(), random.ints(-10, 10).findFirst().getAsInt(), random.ints(-10, 10).findFirst().getAsInt(), 1.0f});
             x -= attackDir[0] * 2;
             y -= attackDir[1] * 2;
             //System.out.println(attackDir[0] * 2 + " " + attackDir[1] * 2);
