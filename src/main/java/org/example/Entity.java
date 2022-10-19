@@ -1,6 +1,6 @@
 package org.example;
 
-public class Entity {
+public abstract class Entity {
     public int animationIndex;
 
     public float x, y;

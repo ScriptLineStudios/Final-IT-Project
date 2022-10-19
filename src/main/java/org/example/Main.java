@@ -44,20 +44,29 @@ public class Main {
     }
     public void petMenu(Cat cat, Engine menuEngine) throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
         menu = new Text("pet menu", -300, 300, 128, engine);
-        Texture _againButton = engine.loadTex("src/main/resources/assets/images/again_button.png");
-        feedButton = new Button(_againButton, "feed", engine);
+        Text feed = new Text("feed: 1", -700, 400, 128, engine);
+        List<Food> petFood = new ArrayList<Food>();
         while (menuEngine.windowOpen()) {
             menuEngine.clear(0.5f, 0.5f, 0.5f);
             cat.x -= 5;
             if (cat.x < -1000.0f) {
                 cat.x = 850;
             }
-            System.out.println(cat.x);
+
+            if (engine.getKey(GLFW_KEY_1)) {
+                System.out.println("yes");
+                petFood.add(new Food(engine));
+            }
+
+            for (Food piece:petFood) {
+                piece.update(this);
+            }
             cat.animationIndex = cat.animate(cat.walkAnimations, cat.animationIndex, 8);
             cat.walkAnimations[cat.animationIndex / 8].render(cat.x, -200, 256, 256);
             menu.y = -600;
+            feed.render_text();
+
             menu.render_text();
-            feedButton.update(0.0f, 0.0f, 128 * 4, 64 * 4, this);
             menuEngine.update();
         }
     }

@@ -17,7 +17,7 @@ public class Text {
         engine = en;
 
         lookup = new HashMap<String, Texture>();
-        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        String alphabet = "abcdefghijklmnopqrstuvwxyz123456789:";
 
         for (int x = 1; x <= alphabet.length(); x++) {
             String _char = Character.toString(alphabet.charAt(x - 1));
