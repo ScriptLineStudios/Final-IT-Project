@@ -7,6 +7,7 @@
 package org.example;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.util.*;
 import org.json.simple.parser.*;
 import java.util.HashMap;
@@ -35,12 +36,28 @@ public class Main {
     Texture youDied;
     float gameOverSize;
     Button againButton;
+    Button feedButton;
 
+    Text menu;
+    public void printHello() {
+        System.out.println("Hello World!");
+    }
     public void petMenu(Cat cat, Engine menuEngine) throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
+        menu = new Text("pet menu", -300, 300, 128, engine);
+        Texture _againButton = engine.loadTex("src/main/resources/assets/images/again_button.png");
+        feedButton = new Button(_againButton, "feed", engine);
         while (menuEngine.windowOpen()) {
-            menuEngine.clear(1.0f, 1.0f, 1.0f);
+            menuEngine.clear(0.5f, 0.5f, 0.5f);
+            cat.x -= 5;
+            if (cat.x < -1000.0f) {
+                cat.x = 850;
+            }
+            System.out.println(cat.x);
             cat.animationIndex = cat.animate(cat.walkAnimations, cat.animationIndex, 8);
-            cat.walkAnimations[cat.animationIndex / 8].render(0, 0, 256, 256);
+            cat.walkAnimations[cat.animationIndex / 8].render(cat.x, -200, 256, 256);
+            menu.y = -600;
+            menu.render_text();
+            feedButton.update(0.0f, 0.0f, 128 * 4, 64 * 4, this);
             menuEngine.update();
         }
     }
@@ -135,14 +152,13 @@ public class Main {
 
         world.removeAll(enemys);
 
-        textYou = new Text("you", -200.0f, 0.0f, 256.0f, engine);
-        textDied = new Text("died", -200.0f, -256.0f, 256.0f, engine);
+        textYou = new Text("you", -0.0f, 0.0f, 256.0f, engine);
+        textDied = new Text("died", -0.0f, -256.0f, 256.0f, engine);
 
         System.out.println(engine.textureIndex);
-        //petMenu(cat, engine);
+        petMenu(cat, engine);
 
-        while (engine.windowOpen()) 
-        {
+        while (engine.windowOpen()) {
             globalTime += engine.getDeltaTime();
             // Measure speed
             double currentTime = glfwGetTime();
@@ -173,10 +189,7 @@ public class Main {
                 }
             }
 
-
-
             List<float[]> leafParticles = new ArrayList<float[]>();
-
             
             for (float[] particle:engine.particles) {
                 particle[1] -= 1;
