@@ -165,7 +165,7 @@ public class Main {
         textDied = new Text("died", -0.0f, -256.0f, 256.0f, engine);
 
         System.out.println(engine.textureIndex);
-        petMenu(cat, engine);
+        //petMenu(cat, engine);
 
         while (engine.windowOpen()) {
             globalTime += engine.getDeltaTime();

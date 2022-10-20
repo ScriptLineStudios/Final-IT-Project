@@ -44,6 +44,8 @@ public class Player extends Entity{
     int kills;
 
     boolean canAttack;
+
+    Texture cat;
     Player(float playerX, float playerY, Engine _engine) throws IOException {
         super(playerX, playerY, 500);
 
@@ -54,18 +56,27 @@ public class Player extends Entity{
 
         this.engine = _engine;
         shadow = engine.loadTex("src/main/resources/assets/images/shadow.png");
-        idleAnimations = new Texture[]{loadTex("src/main/resources/assets/images/player/player_idle1.png"),
-                                    loadTex("src/main/resources/assets/images/player/player_idle2.png"),
-                                    loadTex("src/main/resources/assets/images/player/player_idle3.png"),
-                                    loadTex("src/main/resources/assets/images/player/player_idle4.png"),
-                                    loadTex("src/main/resources/assets/images/player/player_idle5.png"),
+        idleAnimations = new Texture[]{loadTex("src/main/resources/assets/images/player/0.png"),
+                                    loadTex("src/main/resources/assets/images/player/1.png"),
+                                    loadTex("src/main/resources/assets/images/player/2.png"),
+                                    loadTex("src/main/resources/assets/images/player/3.png"),
+                                    loadTex("src/main/resources/assets/images/player/4.png"),
+                                    loadTex("src/main/resources/assets/images/player/5.png"),
+                                    loadTex("src/main/resources/assets/images/player/6.png"),
+                                    loadTex("src/main/resources/assets/images/player/7.png"),
+
         };
 
-        walkAnimations = new Texture[]{loadTex("src/main/resources/assets/images/player/player_walk1.png"),
-                                        loadTex("src/main/resources/assets/images/player/player_walk2.png"),
-                                        loadTex("src/main/resources/assets/images/player/player_walk3.png"),
-                                        loadTex("src/main/resources/assets/images/player/player_walk4.png"),
+        walkAnimations = new Texture[]{loadTex("src/main/resources/assets/images/0.png"),
+                                        loadTex("src/main/resources/assets/images/1.png"),
+                                        loadTex("src/main/resources/assets/images/2.png"),
+                                        loadTex("src/main/resources/assets/images/3.png"),
+                                        loadTex("src/main/resources/assets/images/4.png"),
+                                        loadTex("src/main/resources/assets/images/5.png"),
+                                        loadTex("src/main/resources/assets/images/6.png"),
         };
+
+        cat = engine.loadTex("src/main/resources/assets/images/cat.png");
 
         deathAnimations = new Texture[]{
             engine.loadTex("src/main/resources/assets/images/player/player_death1.png"),
@@ -254,7 +265,7 @@ public class Player extends Entity{
         }
 
         shadow.render(x - camera[0], y - camera[1] - 55, 128, 128, flipped, 0, 1.0f);
-        currentAnimation[animationIndex / 8].render(x - camera[0], y - camera[1], 128 * game.zoom, 128 * game.zoom, flipped, 0, 1.0f);
+        currentAnimation[animationIndex / 8].render(x - camera[0], y - camera[1], 128 * game.zoom, 128 * game.zoom, !flipped, 0, 1.0f);
         currentAnimation[animationIndex / 8].shader.uploadFloat("c", 1.0f);
 
 
