@@ -108,6 +108,7 @@ public class Main {
 
         Texture healthBar = engine.loadTex("src/main/resources/assets/images/almost_empty.png");
         Texture health = engine.loadTex("src/main/resources/assets/images/health.png");
+        Texture cursor = engine.loadTex("src/main/resources/assets/images/cursor.png");
         
         Texture levelComplete = engine.loadTex("src/main/resources/assets/images/level_complete.png");
         Texture _againButton = engine.loadTex("src/main/resources/assets/images/again_button.png");
@@ -255,7 +256,7 @@ public class Main {
 
             double[] mousePos = engine.getMousePos();
 
-            block.render((float)mousePos[0], (float)-mousePos[1], 16, 16);
+            cursor.render((float)mousePos[0], (float)-mousePos[1], 64, 64);
 
             healthBar.render(-700, 400+ 128, 256*2, 64*2);
             health.render(-630, 432 + 120, player.health * 4.05f, 72);

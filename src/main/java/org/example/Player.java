@@ -79,17 +79,29 @@ public class Player extends Entity{
         cat = engine.loadTex("src/main/resources/assets/images/cat.png");
 
         deathAnimations = new Texture[]{
-            engine.loadTex("src/main/resources/assets/images/player/player_death1.png"),
-            engine.loadTex("src/main/resources/assets/images/player/player_death2.png"),
-            engine.loadTex("src/main/resources/assets/images/player/player_death3.png"),
-            engine.loadTex("src/main/resources/assets/images/player/player_death4.png"),            
-            engine.loadTex("src/main/resources/assets/images/player/player_death5.png"),
-            engine.loadTex("src/main/resources/assets/images/player/player_death6.png"),
-            engine.loadTex("src/main/resources/assets/images/player/player_death7.png"),
-            engine.loadTex("src/main/resources/assets/images/player/player_death8.png"),
-            engine.loadTex("src/main/resources/assets/images/player/player_death9.png"),
-            engine.loadTex("src/main/resources/assets/images/player/player_death10.png"),
-            engine.loadTex("src/main/resources/assets/images/player/player_death11.png"),
+            engine.loadTex("src/main/resources/assets/images/death1.png"),
+            engine.loadTex("src/main/resources/assets/images/death2.png"),
+            engine.loadTex("src/main/resources/assets/images/death3.png"),
+            engine.loadTex("src/main/resources/assets/images/death4.png"),
+            engine.loadTex("src/main/resources/assets/images/death5.png"),
+            engine.loadTex("src/main/resources/assets/images/death6.png"),
+            engine.loadTex("src/main/resources/assets/images/death7.png"),
+            engine.loadTex("src/main/resources/assets/images/death8.png"),
+            engine.loadTex("src/main/resources/assets/images/death9.png"),
+            engine.loadTex("src/main/resources/assets/images/death10.png"),
+            engine.loadTex("src/main/resources/assets/images/death11.png"),
+            engine.loadTex("src/main/resources/assets/images/death12.png"),
+            engine.loadTex("src/main/resources/assets/images/death13.png"),
+            engine.loadTex("src/main/resources/assets/images/death14.png"),
+            engine.loadTex("src/main/resources/assets/images/death15.png"),
+            engine.loadTex("src/main/resources/assets/images/death16.png"),
+            engine.loadTex("src/main/resources/assets/images/death17.png"),
+            engine.loadTex("src/main/resources/assets/images/death18.png"),
+            engine.loadTex("src/main/resources/assets/images/death19.png"),
+            engine.loadTex("src/main/resources/assets/images/death20.png"),
+
+
+
         };
 
         whitePlayerImage = engine.loadTex("src/main/resources/assets/images/player_white.png");
@@ -284,7 +296,7 @@ public class Player extends Entity{
                 screenShake();
             }
             if (game.zoom >= 3.0f) {
-                if (animationIndex < 87) {
+                if (animationIndex < 159) {
                     animationIndex = super.animate(currentAnimation, animationIndex, 8);
                 }
                 //game.youDied.render(-700, -400, 200* game.gameOverSize, 128 * game.gameOverSize);

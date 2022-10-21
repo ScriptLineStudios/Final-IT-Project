@@ -55,6 +55,8 @@ public class Engine {
             mouseClicks[button] = action;
         });
 
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
         glfwMakeContextCurrent(window);
         glfwSwapInterval(1);
         glfwShowWindow(window);
