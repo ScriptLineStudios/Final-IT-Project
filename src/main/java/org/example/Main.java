@@ -263,9 +263,7 @@ public class Main {
 
             player._update(this);
 
-            if (player.health > 0) {
-                cat.update(this);
-            }
+
 
 
             if (player.kills >= enemyLookup.get(currentMap)) {
