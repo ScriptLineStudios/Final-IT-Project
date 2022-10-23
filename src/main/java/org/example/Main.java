@@ -37,36 +37,92 @@ public class Main {
     float gameOverSize;
     Button againButton;
     Button feedButton;
+    Texture cursor;
 
     Text menu;
-    public void printHello() {
-        System.out.println("Hello World!");
-    }
-    public void petMenu(Cat cat, Engine menuEngine) throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
-        menu = new Text("pet menu", -300, 300, 128, engine);
-        Text feed = new Text("feed: 1", -700, 400, 128, engine);
-        List<Food> petFood = new ArrayList<Food>();
+    List<Food> petFood;
+    Texture hungerBar;
+    Texture healthBar;
+    Texture health;
+
+    Texture loveBar;
+
+    public void petMenu(Player cat, Engine menuEngine) throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
+        Text loveDesc = new Text("love", -140, 400+ 256, 100, engine);
+        Text healthDesc = new Text("health", -140, 532, 100, engine);
+        Text hungerDesc = new Text("hunger", -140, 400, 100, engine);
+
+        //Text feed = new Text("feed: 1", -700, 400, 128, engine);
+
+        Texture _feed = engine.loadTex("src/main/resources/assets/images/again_button.png");
+        FeedButton feed = new FeedButton(_feed, "feed", menuEngine);
+
+        LoveButton love = new LoveButton(_feed, "love", menuEngine);
+
+        cursor = engine.loadTex("src/main/resources/assets/images/cursor.png");
+
+        petFood = new ArrayList<Food>();
+        player.hunger = (float)(random.ints(0, 100).findFirst().getAsInt());
+        player.love = (float)(random.ints(0, 100).findFirst().getAsInt());
+
         while (menuEngine.windowOpen()) {
             menuEngine.clear(0.5f, 0.5f, 0.5f);
             cat.x -= 5;
+
+            healthDesc.render_text();
+            loveDesc.render_text();
+            hungerDesc.render_text();
+            
+            loveBar.render(-700, 532 + 128, 256*2, 64*2);
+            health.render(-630, 564 + 120, player.love * 4.05f, 72);
+
+            healthBar.render(-700, 400+ 128, 256*2, 64*2);
+            health.render(-630, 432 + 120, player.health * 4.05f, 72);
+
+            healthBar.render(-700, 268+ 128, 256*2, 64*2);
+            health.render(-630, 300 + 120, player.hunger * 4.05f, 72);
+            
+            player.love -= 0.03f;
+            player.hunger -= 0.03f;
+            
+            if (player.love < 0) {
+                player.love = 0;
+            }
+            if (player.hunger < 0) {
+                player.hunger = 0;
+            }
+
+            if (player.love < 35 && player.hunger < 35 && player.health > 10) {
+                player.health -= 0.5f;
+            }
+
             if (cat.x < -1000.0f) {
                 cat.x = 850;
             }
 
             if (engine.getKey(GLFW_KEY_1)) {
-                System.out.println("yes");
                 petFood.add(new Food(engine));
             }
 
             for (Food piece:petFood) {
                 piece.update(this);
             }
+
+            if (player.love > 85 && player.hunger > 85 && player.health < 100) {
+                player.health += 0.5;
+            }
+
+            double[] mousePos = engine.getMousePos();
+
+            cursor.render((float)mousePos[0], (float)-mousePos[1], 64, 64);
+
             cat.animationIndex = cat.animate(cat.walkAnimations, cat.animationIndex, 8);
             cat.walkAnimations[cat.animationIndex / 8].render(cat.x, -200, 256, 256);
-            menu.y = -600;
-            feed.render_text();
+            feed.update(-590, -700, 128 * 4, 64 * 4, this);
+            love.update(-20, -700, 128 * 4, 64 * 4, this);
 
-            menu.render_text();
+
+            //menu.render_text();
             menuEngine.update();
         }
     }
@@ -106,9 +162,13 @@ public class Main {
         Texture leaf = engine.loadTex("src/main/resources/assets/images/leaf.png");
         Texture circle = engine.loadTex("src/main/resources/assets/images/part.png");
 
-        Texture healthBar = engine.loadTex("src/main/resources/assets/images/almost_empty.png");
-        Texture health = engine.loadTex("src/main/resources/assets/images/health.png");
-        Texture cursor = engine.loadTex("src/main/resources/assets/images/cursor.png");
+        healthBar = engine.loadTex("src/main/resources/assets/images/almost_empty.png");
+        loveBar = engine.loadTex("src/main/resources/assets/images/almost_empty.png");
+        hungerBar = engine.loadTex("src/main/resources/assets/images/almost_empty.png");
+
+
+        health = engine.loadTex("src/main/resources/assets/images/health.png");
+        cursor = engine.loadTex("src/main/resources/assets/images/cursor.png");
         
         Texture levelComplete = engine.loadTex("src/main/resources/assets/images/level_complete.png");
         Texture _againButton = engine.loadTex("src/main/resources/assets/images/again_button.png");
@@ -166,8 +226,7 @@ public class Main {
         textDied = new Text("died", -0.0f, -256.0f, 256.0f, engine);
 
         System.out.println(engine.textureIndex);
-        //petMenu(cat, engine);
-
+        //petMenu(player, engine);
         while (engine.windowOpen()) {
             globalTime += engine.getDeltaTime();
             // Measure speed
@@ -232,7 +291,6 @@ public class Main {
                     badBullets.add(bullet);
                 }
 
-                bullet.bullets[bullet.animationIndex / 15].shader.uploadFloat("time", globalTime);
 
                 bullet.update(this);
             }

@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 
-public class Button {
+public class LoveButton {
     Texture texture;
     Text text;
-    Button (Texture _texture, String _text, Engine eng) throws IOException {
+    LoveButton (Texture _texture, String _text, Engine eng) throws IOException {
         texture = _texture;
         text = new Text(_text, 0, 0, 0, eng);
     }
@@ -22,34 +22,8 @@ public class Button {
         float[] buttonRect = new float[]{(float)x, (float)y, (float)width, (float)height};
         if (glfwGetMouseButton(game.engine.window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
             if (game.engine.collideRects(mouseRect, buttonRect)) {
-                try {
-                    game.petMenu(game.player, game.engine);
-                }
-                catch (Exception e) {
-
-                }
-
-                game.player.kills = 0;
-                game.currentMap = game.random.ints(0, 4).findFirst().getAsInt();
-                try {
-                    game.world = game.genMap(game.currentMap);
-                    game.player.x = 200.0f;
-                    game.player.y = -2000.0f;
-                    game.player.health = 100.0f;
-                    game.zoom = 1.0f;
-
-                    for (Object[] pos:game.world) {
-                        if (((String)pos[2]).equals("slime.png")) {
-                            game.slimes.add(new Slime((float)pos[0], (float)pos[1], game.engine));
-                            game.enemys.add(pos);
-                        }
-                        
-                    }
-                    game.world.removeAll(game.enemys);
-
-                }
-                catch (Exception e) {
-                    
+                if (game.player.love < 100) {
+                    game.player.love++;
                 }
             }
         }

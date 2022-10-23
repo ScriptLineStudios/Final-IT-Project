@@ -36,6 +36,8 @@ public class Player extends Entity{
 
     double[] capMouse;
     float health;
+    float love;
+    float hunger;
 
     Texture loadTex(String path) throws IOException{
         return new Texture(path, "src/main/resources/defaultVertex.glsl", "src/main/resources/playerFragment.glsl", engine);
@@ -51,7 +53,10 @@ public class Player extends Entity{
 
         canAttack = true;
 
-        health = 1;
+        health = 100;
+        love = 100;
+        hunger = 100;
+
         kills = 0;
 
         this.engine = _engine;
