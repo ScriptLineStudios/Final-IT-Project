@@ -1,13 +1,15 @@
 /*
 ***** Main.java *****
-
+    The entry point for the program. Responsible for running the game as well as calling
+    update methods on all of the games entites. Also handles missalanious tasks 
+    such as image loading and managing the world. 
 */
 
 
 package org.example;
 
+//Needed imports
 import java.io.*;
-import java.lang.reflect.Method;
 import java.util.*;
 import org.json.simple.parser.*;
 import java.util.HashMap;
@@ -15,42 +17,61 @@ import java.util.HashMap;
 import static org.lwjgl.glfw.GLFW.*; 
 
 public class Main {
-    Engine engine = new Engine();
+    //Create an engine instance, this will be responsible for handling game rendering and input
+    Engine engine = new Engine(); 
+
+    //Declare array lists for holding world data, enemy bullets and slimes
     public List<Object[]> world;
     public List<Bullet> enemyBullets;
     public List<Slime> slimes;
 
+    //Create a texture array for particles
     Texture[] particleImgs;
-    Cat cat;
+
+    //Declare a player
     public Player player;
 
+    //Declare a randomizer
     Random random;
+
+    //Declare the current map index, this will load the associated map.
     int currentMap;
 
+    //A method for returning the map data using the instance above.
     public List<Object[]> genMap(int map) throws ParseException, IOException, FileNotFoundException, java.text.ParseException{
         return World.generateArea(map);
     }
+
+    //Create an array list for the enemies.
     List<Object> enemys;
+
+    //Create a global time variable, with will increment by delta time each frame and is used for sine waves and other random functions.
     float globalTime;
+
+    //Create a zoom variable, all rendered entites have their size multipled by this in order to allow for camera zooming.
     public float zoom = 1.0f;
+
+    //Create Buttons and textures of GUI elements
     Texture youDied;
     float gameOverSize;
     Button againButton;
     Button feedButton;
     Texture cursor;
-
     Text menu;
     List<Food> petFood;
     Texture hungerBar;
     Texture healthBar;
     Texture health;
-
     Texture loveBar;
 
+
+    /*
+        Pet menu, repsonsible for display the 
+    */
     public void petMenu(Player cat, Engine menuEngine) throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
-        Text loveDesc = new Text("love", -140, 400+ 256, 100, engine);
-        Text healthDesc = new Text("health", -140, 532, 100, engine);
-        Text hungerDesc = new Text("hunger", -140, 400, 100, engine);
+        Text loveDesc = new Text("love", -140,     456 - 20, 100, engine);
+        Text healthDesc = new Text("health", -140, 332 - 20, 100, engine);
+        Text hungerDesc = new Text("hunger", -140, 200 - 20, 100, engine);
 
         //Text feed = new Text("feed: 1", -700, 400, 128, engine);
 
@@ -58,6 +79,8 @@ public class Main {
         FeedButton feed = new FeedButton(_feed, "feed", menuEngine);
 
         LoveButton love = new LoveButton(_feed, "love", menuEngine);
+        
+        BackButton newGame = new BackButton(_feed, "back", menuEngine);
 
         cursor = engine.loadTex("src/main/resources/assets/images/cursor.png");
 
@@ -66,21 +89,21 @@ public class Main {
         player.love = (float)(random.ints(0, 100).findFirst().getAsInt());
 
         while (menuEngine.windowOpen()) {
-            menuEngine.clear(0.5f, 0.5f, 0.5f);
+            menuEngine.clear(102 / 255.0f, 137 / 255.0f, 117 / 255.0f);
             cat.x -= 5;
 
             healthDesc.render_text();
             loveDesc.render_text();
             hungerDesc.render_text();
             
-            loveBar.render(-700, 532 + 128, 256*2, 64*2);
-            health.render(-630, 564 + 120, player.love * 4.05f, 72);
+            loveBar.render(-700, 432 + 0, 256*2, 64*2);
+            health.render(-630, 464 + -9, player.love * 4.05f, 72);
 
-            healthBar.render(-700, 400+ 128, 256*2, 64*2);
-            health.render(-630, 432 + 120, player.health * 4.05f, 72);
+            healthBar.render(-700, 300+ 0, 256*2, 64*2);
+            health.render(-630, 332 + -9, player.health * 4.05f, 72);
 
-            healthBar.render(-700, 268+ 128, 256*2, 64*2);
-            health.render(-630, 300 + 120, player.hunger * 4.05f, 72);
+            healthBar.render(-700, 168+ 0, 256*2, 64*2);
+            health.render(-630, 200 + -9, player.hunger * 4.05f, 72);
             
             player.love -= 0.03f;
             player.hunger -= 0.03f;
@@ -120,6 +143,7 @@ public class Main {
             cat.walkAnimations[cat.animationIndex / 8].render(cat.x, -200, 256, 256);
             feed.update(-590, -700, 128 * 4, 64 * 4, this);
             love.update(-20, -700, 128 * 4, 64 * 4, this);
+            newGame.update(360, 300, 128 * 3.5f, 64 * 3.5f, this);
 
 
             //menu.render_text();
@@ -129,15 +153,15 @@ public class Main {
 
     Text textYou;
     Text textDied;
-
-    public void run() throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
+    
+    public void run(boolean menu, float _health) throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
         random = new Random();
         currentMap = random.ints(0, 5).findFirst().getAsInt();
         world = World.generateArea(currentMap);
         engine.init();
         globalTime = 0;
         player = new Player(200.0f, -2000.0f, engine);
-        cat = new Cat(200.0f, -2000.0f, engine);
+        player.health = _health;
 
         enemyBullets = new ArrayList<Bullet>();
 
@@ -165,8 +189,7 @@ public class Main {
         healthBar = engine.loadTex("src/main/resources/assets/images/almost_empty.png");
         loveBar = engine.loadTex("src/main/resources/assets/images/almost_empty.png");
         hungerBar = engine.loadTex("src/main/resources/assets/images/almost_empty.png");
-
-
+        
         health = engine.loadTex("src/main/resources/assets/images/health.png");
         cursor = engine.loadTex("src/main/resources/assets/images/cursor.png");
         
@@ -222,11 +245,12 @@ public class Main {
 
         world.removeAll(enemys);
 
-        textYou = new Text("you", -0.0f, 0.0f, 256.0f, engine);
-        textDied = new Text("died", -0.0f, -256.0f, 256.0f, engine);
+        textYou = new Text("you", -100.0f, 0.0f, 256.0f, engine);
+        textDied = new Text("died", -100.0f, -256.0f, 256.0f, engine);
 
         System.out.println(engine.textureIndex);
-        //petMenu(player, engine);
+        if (menu)
+            petMenu(player, engine);
         while (engine.windowOpen()) {
             globalTime += engine.getDeltaTime();
             // Measure speed
@@ -316,8 +340,8 @@ public class Main {
 
             cursor.render((float)mousePos[0], (float)-mousePos[1], 64, 64);
 
-            healthBar.render(-700, 400+ 128, 256*2, 64*2);
-            health.render(-630, 432 + 120, player.health * 4.05f, 72);
+            healthBar.render(-700, 400+ 32, 256*2, 64*2);
+            health.render(-630, 432 + 24, player.health * 4.05f, 72);
 
             player._update(this);
 
@@ -341,7 +365,11 @@ public class Main {
         }
     }
 
+    /*
+        The main method. Is responsible for creating a new instance of the main class 
+        and running it. Throws the nessecary expections.
+    */
     public static void main(String[] args) throws ParseException, IOException, FileNotFoundException, java.text.ParseException {
-        new Main().run();
+        new Main().run(false, 100.0f);
     }
 }
